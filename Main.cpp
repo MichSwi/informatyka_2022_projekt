@@ -3,6 +3,26 @@
 #include <SFML/System.hpp>
 #include <iostream>
 
+class gracz {
+private:
+	std::string imie;
+	int punkty;
+	int poziom;
+public:
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 int main() {
 	sf::RenderWindow okno(sf::VideoMode(1280, 720), "Gra", sf::Style::Titlebar | sf::Style::Close);
