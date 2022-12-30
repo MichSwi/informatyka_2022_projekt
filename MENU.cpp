@@ -7,7 +7,7 @@ MENU::MENU(float szerokosc, float wysokosc) {
 
 	//ROZPOCZNIJ GRE
 	pozycjeMenu[0].setFont(czcionka);
-	pozycjeMenu[0].setFillColor(sf::Color::White);
+	pozycjeMenu[0].setFillColor(sf::Color::Red);
 	pozycjeMenu[0].setCharacterSize(70);
 	pozycjeMenu[0].setString("Rozpocznij Gre");
 	pozycjeMenu[0].setPosition(400, 200);
@@ -27,16 +27,16 @@ MENU::MENU(float szerokosc, float wysokosc) {
 	pozycjeMenu[3].setFont(czcionka);
 	pozycjeMenu[3].setFillColor(sf::Color::White);
 	pozycjeMenu[3].setCharacterSize(70);
-	pozycjeMenu[3].setString("OST");
+	pozycjeMenu[3].setString("Wyjdz");
 	pozycjeMenu[3].setPosition(400, 500);
 
-	menuWybrane = -1;
+	menuWybrane = 0;
 }
 
 MENU::~MENU() {
-
-
 }
+
+
 
 void MENU::draw(sf::RenderWindow& window) {
 	for (int i = 0; i < 4; i++) {
@@ -46,8 +46,8 @@ void MENU::draw(sf::RenderWindow& window) {
 
 void MENU::wGore() {
 	if (menuWybrane == -1) {
-		menuWybrane = 0;
-		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Blue);
+		menuWybrane = 3;
+		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
 	}
 	else {
 
@@ -57,7 +57,7 @@ void MENU::wGore() {
 		if (menuWybrane == -1) {
 			menuWybrane = 3;
 		}
-		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Blue);
+		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
 	}
 	std::cout << "wybrane menu:" << menuWybrane << "\n";
 }
@@ -65,7 +65,7 @@ void MENU::wGore() {
 void MENU::wDol() {
 	if (menuWybrane == -1) {
 		menuWybrane = 0;
-		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Blue);
+		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
 	}
 	else {
 		pozycjeMenu[menuWybrane].setFillColor(sf::Color::White);
@@ -73,7 +73,7 @@ void MENU::wDol() {
 		if (menuWybrane == 4) {
 			menuWybrane = 0;
 		}
-		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Blue);
+		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
 	}
 	std::cout << "wybrane menu:" << menuWybrane << "\n";
 }
