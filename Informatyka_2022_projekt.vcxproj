@@ -142,11 +142,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GRA.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MENU.cpp" />
     <ClCompile Include="trudnosc.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GRA.h" />
     <ClInclude Include="MENU.h" />
     <ClInclude Include="trudnosc.h" />
   </ItemGroup>

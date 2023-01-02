@@ -51,6 +51,17 @@ trudnosc::trudnosc(float wys, float szer) {
 	samolot[2].setString("samolot 2");
 	samolot[2].setPosition(525, 400);
 
+	zatw.setFont(czcionka);
+	zatw.setFillColor(sf::Color::White);
+	zatw.setCharacterSize(70);
+	zatw.setString("Zatwierdz");
+	zatw.setPosition(250, 600);
+
+	powr.setFont(czcionka);
+	powr.setFillColor(sf::Color::White);
+	powr.setCharacterSize(70);
+	powr.setString("Powrot");
+	powr.setPosition(450, 600);
 }
 void trudnosc::draw(sf::RenderWindow& window) {
 	window.draw(text1);
@@ -59,12 +70,16 @@ void trudnosc::draw(sf::RenderWindow& window) {
 	window.draw(text2);
 	for(int i=0;i<3;i++)
 	window.draw(samolot[i]);
+	window.draw(zatw);
+	window.draw(powr);
 }
 
 void trudnosc::Enter() {
 	licznik++;
-	if (licznik == 3)
+	std::cout << "licznik=" << licznik << "\n";
+	if (licznik == 3) {
 		licznik = 0;
+	}
 //	std::cout << licznik;
 	if(licznik==0){
 		gracz[0].setFillColor(sf::Color::Red);
@@ -74,21 +89,35 @@ void trudnosc::Enter() {
 		samolot[1].setFillColor(sf::Color::Red);
 		wybranysamolot = 1;
 	}
+	if (licznik == 2) {
+		zatw.setFillColor(sf::Color::Red);
+		pow = 2;//zatwierdz
+	}
+	if (licznik == 0 && pow == 1) {
+		gracz[1].setFillColor(sf::Color::White);
+		samolot[0].setFillColor(sf::Color::White);
+		samolot[1].setFillColor(sf::Color::White);
+		samolot[2].setFillColor(sf::Color::White);
+		powr.setFillColor(sf::Color::White);
+		zatw.setFillColor(sf::Color::White);
+	}
 }
 
 
 void trudnosc::wLewo() {
-	if (licznik == 0) {									//wybor ilosci graczy
+	if (licznik == 0) {		
+		pow = 0;//wybor ilosci graczy
 		gracz[0].setFillColor(sf::Color::Red);
 		gracz[1].setFillColor(sf::Color::White);
 		wybranygracz = 1;//1gracz
 	}
-	if (licznik == 1 && wybranysamolot == 1) {			//wybor samolotu
+	if (licznik == 1 && wybranysamolot == 1) {	
+		pow = 0;		//wybor samolotu
 		samolot[0].setFillColor(sf::Color::Red);
 		samolot[1].setFillColor(sf::Color::White);
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 0;
-		std::cout << wybranysamolot;
+	//	std::cout << wybranysamolot;
 
 	}
 	if (licznik == 1 && wybranysamolot == 2) {
@@ -96,8 +125,13 @@ void trudnosc::wLewo() {
 		samolot[1].setFillColor(sf::Color::Red);
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 1;
-		std::cout << wybranysamolot;
+		//std::cout << wybranysamolot;
 
+	}
+	if (licznik == 2) {
+		zatw.setFillColor(sf::Color::Red);
+		powr.setFillColor(sf::Color::White);
+		pow = 2;//zatwierdz
 	}
 }
 
@@ -112,7 +146,7 @@ void trudnosc::wPrawo() {
 		samolot[1].setFillColor(sf::Color::White);
 		samolot[2].setFillColor(sf::Color::Red);
 		wybranysamolot = 2;
-		std::cout << wybranysamolot;
+		//std::cout << wybranysamolot;
 
 	}
 	if (licznik == 1 && wybranysamolot==0) {
@@ -120,9 +154,14 @@ void trudnosc::wPrawo() {
 		samolot[1].setFillColor(sf::Color::Red);
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 1;
-		std::cout << wybranysamolot;
+	//	std::cout << wybranysamolot;
 
 	}
-	
+	if (licznik == 2) {
+		zatw.setFillColor(sf::Color::White);
+		powr.setFillColor(sf::Color::Red);
+		pow = 1;// powrot
+	}
+
 
 }
