@@ -1,5 +1,8 @@
 #include "GRA.h"
 
+//RYSOWANIE SAMOLOTU GRACZA, PRZECIWNIKOW, POCISKOW ITD
+
+
 GRA::GRA(float szer,float wys) {
 
 	texture.loadFromFile("test.png");

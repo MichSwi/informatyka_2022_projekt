@@ -1,5 +1,7 @@
 #include "MENU.h"
 
+//RYSOWANIE I UZYWANIE GLOWNEGO MENU
+
 MENU::MENU(float szerokosc, float wysokosc) {
 	if (!czcionka.loadFromFile("czcionka.ttf")) {
 		std::cout << "Brak czcionki\n";
@@ -23,7 +25,7 @@ MENU::MENU(float szerokosc, float wysokosc) {
 	pozycjeMenu[2].setCharacterSize(70);
 	pozycjeMenu[2].setString("Pomoc");
 	pozycjeMenu[2].setPosition(400, 400);
-	//OST
+	//WYJDZ
 	pozycjeMenu[3].setFont(czcionka);
 	pozycjeMenu[3].setFillColor(sf::Color::White);
 	pozycjeMenu[3].setCharacterSize(70);
@@ -37,13 +39,13 @@ MENU::~MENU() {
 }
 
 
-
 void MENU::draw(sf::RenderWindow& window) {
 	for (int i = 0; i < 4; i++) {
 		window.draw(pozycjeMenu[i]);
 	}
 }
 
+//PRZESUNIECIE W GORE (STRZALKA W GORE)
 void MENU::wGore() {
 	if (menuWybrane == -1) {
 		menuWybrane = 3;
@@ -62,6 +64,7 @@ void MENU::wGore() {
 	std::cout << "wybrane menu:" << menuWybrane << "\n";
 }
 
+//PRZESUNIECIE W DOL (STRZALKA W DOL)
 void MENU::wDol() {
 	if (menuWybrane == -1) {
 		menuWybrane = 0;

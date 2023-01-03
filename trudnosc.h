@@ -13,10 +13,10 @@ public:
 	void wPrawo();
 	void wLewo();
 	void draw(sf::RenderWindow& window);
-	int licznik = 0;
-	int wybranygracz = 1;
+	int licznik = 0;//mowi w jakim wierszu aktualnie jestesmy
+	int wybranygracz = 1;// 0 -niezdefiniowane  1-1gracz   2-2graczy
 	int wybranysamolot = 1;
-	int pow = 0;
+	int pow = 0;// 0-niezdefiniowane   1-powrot   2-zatwierdz
 
 	int stan() {
 		return pow;
@@ -24,9 +24,9 @@ public:
 
 private:
 	sf::Font czcionka;
-	sf::Text text1;
-	sf::Text text2;
-	sf::Text gracz[2];
+	sf::Text text1;//"wybierz ilosc graczy"
+	sf::Text text2;//"wybierz samolot"
+	sf::Text gracz[2];//"1gracz  2graczy"
 	sf::Text samolot[3];
 	sf::Text zatw;
 	sf::Text powr;

@@ -1,5 +1,7 @@
 #include "trudnosc.h"
 
+//RYSOWANIE I UZYWANIE USTAWIEN GRY PO WYBRANIU "ROZPOCZNIJ" W GLOWNYM MENU
+
 trudnosc::trudnosc(float wys, float szer) {
 	if (!czcionka.loadFromFile("czcionka.ttf")) {
 		std::cout << "Brak czcionki\n";
@@ -51,12 +53,14 @@ trudnosc::trudnosc(float wys, float szer) {
 	samolot[2].setString("samolot 2");
 	samolot[2].setPosition(525, 400);
 
+	//NAPIS ZATWIERDZ
 	zatw.setFont(czcionka);
 	zatw.setFillColor(sf::Color::White);
 	zatw.setCharacterSize(70);
 	zatw.setString("Zatwierdz");
 	zatw.setPosition(250, 600);
 
+	//NAPIS POWROT
 	powr.setFont(czcionka);
 	powr.setFillColor(sf::Color::White);
 	powr.setCharacterSize(70);
@@ -74,26 +78,29 @@ void trudnosc::draw(sf::RenderWindow& window) {
 	window.draw(powr);
 }
 
+
+//FUNKCJA SIE WYKONUJE PO NACISNIECIU ENTER
 void trudnosc::Enter() {
-	licznik++;
+	licznik++; // LICZY OD 0 DO 2 (PRZY 3 RESET) - MOWI W JAKIEJ LINI JESTESMY
 	std::cout << "licznik=" << licznik << "\n";
 	if (licznik == 3) {
 		licznik = 0;
 	}
 //	std::cout << licznik;
-	if(licznik==0){
+	if(licznik==0){										//LINIA 0 - 1 GRACZ / 2 GRACZY
 		gracz[0].setFillColor(sf::Color::Red);
-		wybranygracz = 1;
+		wybranygracz = 1;//domyslnie wybierany 1 gracz
 	}
-	if (licznik == 1) {
+	if (licznik == 1) {									//LINIA 1 - SAMOLOT 1/2/3
 		samolot[1].setFillColor(sf::Color::Red);
-		wybranysamolot = 1;
+		wybranysamolot = 1;//domyslnie wybierany srodkowy samolot
 	}
 	if (licznik == 2) {
 		zatw.setFillColor(sf::Color::Red);
-		pow = 2;//zatwierdz
+		pow = 2;//domyslnie wybierane zatwierdz
 	}
 	if (licznik == 0 && pow == 1) {
+		//reset kolorow po powrocie do menu glownego
 		gracz[1].setFillColor(sf::Color::White);
 		samolot[0].setFillColor(sf::Color::White);
 		samolot[1].setFillColor(sf::Color::White);
@@ -103,16 +110,16 @@ void trudnosc::Enter() {
 	}
 }
 
-
+//co sie dzieje po kliknieciu strzalki w lewo
 void trudnosc::wLewo() {
-	if (licznik == 0) {		
-		pow = 0;//wybor ilosci graczy
+	if (licznik == 0) {							//wybor ilosci graczy
+		pow = 0;
 		gracz[0].setFillColor(sf::Color::Red);
 		gracz[1].setFillColor(sf::Color::White);
 		wybranygracz = 1;//1gracz
 	}
-	if (licznik == 1 && wybranysamolot == 1) {	
-		pow = 0;		//wybor samolotu
+	if (licznik == 1 && wybranysamolot == 1) {	//wybor samolotu
+		pow = 0;		
 		samolot[0].setFillColor(sf::Color::Red);
 		samolot[1].setFillColor(sf::Color::White);
 		samolot[2].setFillColor(sf::Color::White);
@@ -120,7 +127,7 @@ void trudnosc::wLewo() {
 	//	std::cout << wybranysamolot;
 
 	}
-	if (licznik == 1 && wybranysamolot == 2) {
+	if (licznik == 1 && wybranysamolot == 2) {	//wybor samolotu
 		samolot[0].setFillColor(sf::Color::White);
 		samolot[1].setFillColor(sf::Color::Red);
 		samolot[2].setFillColor(sf::Color::White);
@@ -128,20 +135,21 @@ void trudnosc::wLewo() {
 		//std::cout << wybranysamolot;
 
 	}
-	if (licznik == 2) {
+	if (licznik == 2) {							//wybor zatwierdz/powrot
 		zatw.setFillColor(sf::Color::Red);
 		powr.setFillColor(sf::Color::White);
 		pow = 2;//zatwierdz
 	}
 }
 
+//co sie dzieje po kliknieciu strzalki w prawo
 void trudnosc::wPrawo() {
-	if (licznik == 0) {
+	if (licznik == 0) {							//wybor 1gracz/2graczy
 		gracz[0].setFillColor(sf::Color::White);
 		gracz[1].setFillColor(sf::Color::Red);
 		wybranygracz = 2;//2 graczy
 	}
-	if (licznik == 1 && wybranysamolot == 1) {
+	if (licznik == 1 && wybranysamolot == 1) {	//wybor samolotow
 		samolot[0].setFillColor(sf::Color::White);
 		samolot[1].setFillColor(sf::Color::White);
 		samolot[2].setFillColor(sf::Color::Red);
@@ -154,10 +162,10 @@ void trudnosc::wPrawo() {
 		samolot[1].setFillColor(sf::Color::Red);
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 1;
-	//	std::cout << wybranysamolot;
+		//std::cout << wybranysamolot;
 
 	}
-	if (licznik == 2) {
+	if (licznik == 2) {							//wybor zatwierdz/powrot
 		zatw.setFillColor(sf::Color::White);
 		powr.setFillColor(sf::Color::Red);
 		pow = 1;// powrot
