@@ -8,17 +8,19 @@ class GRA
 public:
 	GRA(float szer, float wys);
 
-	sf::Sprite sprite, sprite2;
-	sf::Texture texture, texture2;
+	sf::Sprite gracz, bot;
+	sf::Texture textura_gracza, textura_bota;
 
-	float v=6; // PREDKOSC GRACZA
+	float v=0.1; // PREDKOSC 
 	void draw(sf::RenderWindow &window);
-	void ruch1(int i); //RUCH GRACZA 1
-	void ruch2(int i); //RUCH GRACZA 2
+	void ruchgracza(int i); //RUCH GRACZA
+	void ruchbota(); //RUCH BOTA
+	bool lewo = 0;
+
 
 private:
-	sf::RectangleShape gracz1;
-	sf::RectangleShape gracz2;
+	sf::Vector2f pozycjabota;
+	sf::Vector2f pozycjagracza;
 
 };
 

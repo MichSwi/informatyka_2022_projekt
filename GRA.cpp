@@ -1,44 +1,70 @@
-#include "GRA.h"
-
 //RYSOWANIE SAMOLOTU GRACZA, PRZECIWNIKOW, POCISKOW ITD
 
+#include "GRA.h"
+
+extern int wybranastrona; //   wyciagniecie zmiennej z Main.cpp
+
+
+//================================================
+//potrzebne do zatrzymania przeciwnikow i pociskow                          <---------------------------
+//================================================
 
 GRA::GRA(float szer,float wys) {
 
-	texture.loadFromFile("test.png");
+	textura_gracza.loadFromFile("test1.png");
 
-	sprite.setTexture(texture);
-	sprite.setTextureRect(sf::IntRect(10, 10, 100, 300));
-	sprite.setColor(sf::Color(255, 255, 255, 200));
-	sprite.setPosition(100, 25);
+	gracz.setTexture(textura_gracza);
+	gracz.setTextureRect(sf::IntRect(0, 0, 60, 90));
+	gracz.setPosition(100, 100);
 
-	texture2.loadFromFile("test2.png");
+	textura_bota.loadFromFile("test2.png");
 
-	sprite2.setTexture(texture2);
-	sprite2.setTextureRect(sf::IntRect(10, 10, 100, 300));
-	sprite2.setColor(sf::Color(255, 255, 255, 200));
-	sprite2.setPosition(100, 25);
+	bot.setTexture(textura_bota);
+	bot.setTextureRect(sf::IntRect(0, 0, 60, 90));
+	bot.setPosition(1000, 500);
 
 }
 
 void GRA::draw(sf::RenderWindow& window) {
-	window.draw(sprite);
-	window.draw(sprite2);
+	window.draw(gracz);
+	window.draw(bot);
 }
-void GRA::ruch1(int i) {
+void GRA::ruchgracza(int i) {
 		if (i == 0) {
-			sprite.move(-v, 0);
+			gracz.move(-v, 0);
 		}
 		if (i == 1) {
-			sprite.move(v, 0);
+			gracz.move(v, 0);
 		}
  }
 
-void GRA::ruch2(int i) {
-	if (i == 0) {
-		sprite2.move(-v, 0);
+void GRA::ruchbota() {
+
+	int lewa_krawedz = 1200.0;
+	int prawa_krawedz = 800.0;
+
+	pozycjabota = bot.getPosition();
+
+	if (lewo==1) {
+		std::cout << "\nruszam sie w lewo";
+		bot.move(-3, 0);
+		pozycjabota = bot.getPosition();
+		if (pozycjabota.x < 500) {
+			std::cout << "przekroczono";
+			lewo = 0;
+		}
 	}
-	if (i == 1) {
-		sprite2.move(v, 0);
+
+	if (lewo==0) {
+		std::cout << "\nruszam sie w prawo";
+		bot.move(3, 0);
+		pozycjabota = bot.getPosition();
+		if (pozycjabota.x > 1500) {
+			std::cout << "przekroczono";
+			lewo = 1;
+		}
 	}
+
+	std::cout << "\nlewo="<< lewo << "\n" << pozycjabota.x;
+
 }

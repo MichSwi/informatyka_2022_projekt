@@ -1,8 +1,9 @@
 #include "MENU.h"
 
+
 //RYSOWANIE I UZYWANIE GLOWNEGO MENU
 
-MENU::MENU(float szerokosc, float wysokosc) {
+MENU::MENU() {
 	if (!czcionka.loadFromFile("czcionka.ttf")) {
 		std::cout << "Brak czcionki\n";
 	}
@@ -39,7 +40,7 @@ MENU::~MENU() {
 }
 
 
-void MENU::draw(sf::RenderWindow& window) {
+void MENU::draw(sf::RenderWindow &window) {
 	for (int i = 0; i < 4; i++) {
 		window.draw(pozycjeMenu[i]);
 	}

@@ -4,10 +4,12 @@
 #include <iostream>
 
 
+
 class MENU
 {
 public:
-	MENU(float szerokosc, float wysokosc);
+	//MENU(float szerokosc, float wysokosc);
+	MENU();
 
 	void draw(sf::RenderWindow& window);
 	void wGore();

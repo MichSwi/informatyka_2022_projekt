@@ -5,58 +5,94 @@
 #include "GRA.h"
 
 int wybranastrona = 0;
+bool wyswietlPomoc = 0;
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1800, 1000), "Moja GRA", sf::Style::Default);
-	MENU glownemenu(window.getSize().x, window.getSize().y);
+//	MENU glownemenu(window.getSize().x, window.getSize().y);
+	sf::RectangleShape POMOC(sf::Vector2f(500, 500));
+
+	window.setFramerateLimit(60);
+
+	POMOC.setFillColor(sf::Color::Blue);
+	POMOC.setPosition(50, 50); 
+
+	MENU glownemenu;
 	trudnosc poziom(window.getSize().x, window.getSize().y);
 	GRA gra(window.getSize().x, window.getSize().y);
 	while (window.isOpen())
 	{
 		if (wybranastrona == 0) {
+			sf::Event evn;
 			//std::cout << "test\n";
 			window.clear();
 			glownemenu.draw(window);
+
+			if (wyswietlPomoc == 1) {
+				window.draw(POMOC);
+			}
+			
 			window.display();
-			sf::Event evn;
+			
 			while (window.pollEvent(evn))
 			{
-
 				switch (evn.type) {
 				case sf::Event::Closed:
 					window.close();
 					break;
 				case sf::Event::KeyPressed:
-					if (evn.key.code == sf::Keyboard::Escape)
+					if (evn.key.code == sf::Keyboard::Escape) {
+						std::cout << "WYJDZ - ESC\n\n";
 						window.close();
+					}
 					break;
 				case sf::Event::KeyReleased:
 					switch (evn.key.code) {
+					case sf::Keyboard::F2:
+						if (wyswietlPomoc == 1)
+							wyswietlPomoc = 0;
+						else
+							wyswietlPomoc = 1;
+						break;
 					case sf::Keyboard::Up:
-						glownemenu.wGore();
+						if(!wyswietlPomoc)
+							glownemenu.wGore();
 						break;
 
 					case sf::Keyboard::Down:
-						glownemenu.wDol();
+						if(!wyswietlPomoc)
+							glownemenu.wDol();
 						break;
 					case sf::Keyboard::Return:
 						switch (glownemenu.menuNacisniete()) {
 						case 0:
-							std::cout << "zatwierdzono menu 0 || ";
-							wybranastrona = 1;
+							//rozpoczinj gre
+							if (!wyswietlPomoc) {
+								std::cout << "zatwierdzono menu rozpocznij || ";
+								wybranastrona = 1;
+							}
 							break;
 						case 1:
-							std::cout << "zatwierdzono menu 1 || ";
-							wybranastrona = 2;
+							//opcje
+							if (!wyswietlPomoc) {
+								std::cout << "zatwierdzono menu opcje || ";
+								wybranastrona = 3;
+							}
 							break;
 						case 2:
-							std::cout << "zatwierdzono menu 2 || ";
-							wybranastrona = 3;
+							//pomoc
+							if (!wyswietlPomoc) {
+								std::cout << "zatwierdzono menu pomoc || ";
+								wybranastrona = 4;
+							}
 							break;
 						case 3:
-							std::cout << "wybrano menu 3";
-							window.close();
+							//window
+							if (!wyswietlPomoc) {
+								std::cout << "wybrano menu wyjdz";
+								window.close();
+							}
 							break;
 						}
 
@@ -64,7 +100,7 @@ int main()
 				}
 			}
 		}
-		if (wybranastrona == 1) {
+		if (wybranastrona == 1) {//wybor samolotu
 			window.clear();
 			poziom.draw(window);
 			window.display();
@@ -103,12 +139,21 @@ int main()
 				}
 			}
 		}
-		if (wybranastrona == 2) {
-			window.clear();
-			gra.draw(window);
-			window.display();
-			sf::Event evn;
-			while (window.pollEvent(evn) && wybranastrona == 2) {
+		if (wybranastrona == 2) {//faktyczna gra
+			
+				window.setFramerateLimit(60);
+				gra.ruchbota();
+				window.clear(sf::Color::White);
+				gra.draw(window);
+				window.display();
+				sf::Event evn;
+				
+				while (window.pollEvent(evn)) {
+					if (evn.type == sf::Event::Closed || evn.key.code == sf::Keyboard::Escape)
+						window.close();
+					gra.ruchbota();
+				}
+/*
 				switch (evn.type) {
 				case sf::Event::Closed:
 					window.close();
@@ -117,25 +162,46 @@ int main()
 					if (evn.key.code == sf::Keyboard::Escape)
 						window.close();
 					if (evn.key.code == sf::Keyboard::Left) {
-						gra.ruch1(0);
+						gra.ruchgracza(0);
 				//		std::cout << "lewo\n";
 					}
 					if (evn.key.code == sf::Keyboard::Right) {
-						gra.ruch1(1);
+						gra.ruchgracza(1);
 				//		std::cout << "prawo\n";
 					}
-					if (evn.key.code == sf::Keyboard::A) {
-						gra.ruch2(0);
-						std::cout << "lewo\n";
+				}*/
+
+			
+		}
+		if (wybranastrona == 4) {//pomoc
+
+			std::cout << "wybrano pomoc poprawnie\n";;
+
+			window.clear(sf::Color::White);
+			window.draw(POMOC);
+			window.display();
+			sf::Event(evn);
+			while (window.pollEvent(evn) && wybranastrona == 4) {
+				std::cout << "window.pollEvent dziala\n\n";
+				switch (evn.type) {
+				case sf::Event::Closed:
+					window.close();
+					break;
+				case sf::Event::KeyReleased:
+					if (evn.key.code == sf::Keyboard::Escape)
+						window.close();
+					if (evn.key.code == sf::Keyboard::Return) {
+						std::cout << "\n - zamknieto pomoc enterem -\n";
+						wybranastrona = 0;
 					}
-					if (evn.key.code == sf::Keyboard::D) {
-						gra.ruch2(1);
-						std::cout << "prawo\n";
+					if (evn.key.code == sf::Keyboard::F2) {
+						std::cout << "\n - zamknieto pomoc F2 -\n";
+						wybranastrona = 0;
 					}
 					break;
 				}
-
 			}
+
 		}
 	}
 		return 0;
