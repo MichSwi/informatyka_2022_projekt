@@ -53,27 +53,48 @@ trudnosc::trudnosc(float wys, float szer) {
 	samolot[2].setString("samolot 2");
 	samolot[2].setPosition(525, 400);
 
+	samolot_textura[0].loadFromFile("rdy_szary_idle.png");
+	samolot_sprite[0].setTexture(samolot_textura[0]);
+	samolot_sprite[0].setTextureRect(sf::IntRect(0, 0, 216, 205));
+	samolot_sprite[0].setPosition(200, 500);
+
+	samolot_textura[1].loadFromFile("ten nie pixel.png");
+	samolot_sprite[1].setTexture(samolot_textura[1]);
+	samolot_sprite[1].setTextureRect(sf::IntRect(0, 0, 216, 185));
+	samolot_sprite[1].setPosition(350, 500);
+
+
+	samolot_textura[2].loadFromFile("paap.png");
+	samolot_sprite[2].setTexture(samolot_textura[2]);
+	samolot_sprite[2].setTextureRect(sf::IntRect(0, 0, 217, 104));
+	samolot_sprite[2].setPosition(525, 500);
+
+
+
+
 	//NAPIS ZATWIERDZ
 	zatw.setFont(czcionka);
 	zatw.setFillColor(sf::Color::White);
 	zatw.setCharacterSize(70);
 	zatw.setString("Zatwierdz");
-	zatw.setPosition(250, 600);
+	zatw.setPosition(250, 700);
 
 	//NAPIS POWROT
 	powr.setFont(czcionka);
 	powr.setFillColor(sf::Color::White);
 	powr.setCharacterSize(70);
 	powr.setString("Powrot");
-	powr.setPosition(450, 600);
+	powr.setPosition(450, 700);
 }
-void trudnosc::draw(sf::RenderWindow& window) {
+void trudnosc::draw(sf::RenderWindow &window) {
 	window.draw(text1);
 	window.draw(gracz[0]);
 	window.draw(gracz[1]);
 	window.draw(text2);
-	for(int i=0;i<3;i++)
-	window.draw(samolot[i]);
+	for (int i = 0; i < 3; i++) {
+		window.draw(samolot_sprite[i]);
+		window.draw(samolot[i]);
+	}
 	window.draw(zatw);
 	window.draw(powr);
 }
@@ -82,15 +103,15 @@ void trudnosc::draw(sf::RenderWindow& window) {
 //FUNKCJA SIE WYKONUJE PO NACISNIECIU ENTER
 void trudnosc::Enter() {
 	licznik++; // LICZY OD 0 DO 2 (PRZY 3 RESET) - MOWI W JAKIEJ LINI JESTESMY
-	std::cout << "licznik=" << licznik << "\n";
 	if (licznik == 3) {
 		licznik = 0;
 	}
 //	std::cout << licznik;
-	if(licznik==0){										//LINIA 0 - 1 GRACZ / 2 GRACZY
+	if(licznik==0 && wybranygracz==1){										//LINIA 0 - 1 GRACZ / 2 GRACZY
 		gracz[0].setFillColor(sf::Color::Red);
-		wybranygracz = 1;//domyslnie wybierany 1 gracz
+		//wybranygracz = 1;//domyslnie wybierany 1 gracz
 	}
+	
 	if (licznik == 1) {									//LINIA 1 - SAMOLOT 1/2/3
 		samolot[1].setFillColor(sf::Color::Red);
 		wybranysamolot = 1;//domyslnie wybierany srodkowy samolot

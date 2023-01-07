@@ -6,17 +6,19 @@
 class GRA
 {
 public:
-	GRA(float szer, float wys);
+	GRA(float wys, float szer);
 
 	sf::Sprite gracz, bot;
-	sf::Texture textura_gracza, textura_bota;
+	sf::Texture textura_gracza[3], textura_bota;
 
-	float v=0.1; // PREDKOSC 
+	float v=5.0f; // PREDKOSC 
 	void draw(sf::RenderWindow &window);
+	void draw_bot(sf::RenderWindow& window);
+
 	void ruchgracza(int i); //RUCH GRACZA
 	void ruchbota(); //RUCH BOTA
 	bool lewo = 0;
-
+	void wybierzsamolot(int wybranysamolot);
 
 private:
 	sf::Vector2f pozycjabota;

@@ -62,7 +62,6 @@ void MENU::wGore() {
 		}
 		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
 	}
-	std::cout << "wybrane menu:" << menuWybrane << "\n";
 }
 
 //PRZESUNIECIE W DOL (STRZALKA W DOL)
@@ -79,5 +78,4 @@ void MENU::wDol() {
 		}
 		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
 	}
-	std::cout << "wybrane menu:" << menuWybrane << "\n";
 }
