@@ -11,7 +11,7 @@ bool wyswietlPomoc = 0;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1800, 1000), "Moja GRA", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Moja GRA", sf::Style::Default);
 	window.setFramerateLimit(60);
 
 
@@ -40,6 +40,7 @@ int main()
 	ANIMACJA szary_menu(&poziom.samolot_textura[0], sf::Vector2u(2, 1), 0.6f);
 	ANIMACJA czarny_menu(&poziom.samolot_textura[1], sf::Vector2u(2, 1), 0.6f);
 	ANIMACJA papierowy_menu(&poziom.samolot_textura[2], sf::Vector2u(2, 1), 0.6f);
+	
 
 
 	while (window.isOpen())
@@ -183,31 +184,28 @@ int main()
 		if (wybranastrona == 2) {//faktyczna gra
 
 			gra.wybierzsamolot(wybranysamolot);
-			
-			
 
 			animacja.update(0, deltatime);
 			gra.gracz.setTextureRect(animacja.poleobrazu);
 			///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 			window.clear(sf::Color::Blue);
 			if (poziom.wybranygracz == 2) {
 				gra.draw_bot(window);
-				gra.ruchbota();
 			}
-		
+			gra.ruchbota();
+
+			gra.ruchpociskow();
 			gra.draw(window);
 			window.display();
 			sf::Event evn;
 
-			animacja.update(0, deltatime);
-			gra.gracz.setTextureRect(animacja.poleobrazu);
-
 			while (window.pollEvent(evn)) {
 				if (evn.type == sf::Event::Closed || evn.key.code == sf::Keyboard::Escape)
 					window.close();
-						
+				if (evn.type == sf::Event::KeyReleased && evn.key.code == sf::Keyboard::Space) {
+					gra.strzal();
+				}
 			}
 				
 			switch (evn.type) {
@@ -223,13 +221,11 @@ int main()
 					if (evn.key.code == sf::Keyboard::Right) {
 						gra.ruchgracza(1);
 					}
+					break;					
 			}
-
-
 		}
+
 			if (wybranastrona == 4) {//pomoc
-
-
 				window.clear(sf::Color::Blue);
 				window.draw(POMOC);
 				window.display();
@@ -251,7 +247,6 @@ int main()
 						break;
 					}
 				}
-
 			}
 		}
 		return 0;

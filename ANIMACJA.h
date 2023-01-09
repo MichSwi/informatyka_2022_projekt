@@ -18,8 +18,5 @@ private:
 
 	float calyczas;
 	float czaszmiany;
-
-
-
 };
 

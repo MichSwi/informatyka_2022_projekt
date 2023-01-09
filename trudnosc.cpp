@@ -70,8 +70,6 @@ trudnosc::trudnosc(float wys, float szer) {
 	samolot_sprite[2].setPosition(525, 500);
 
 
-
-
 	//NAPIS ZATWIERDZ
 	zatw.setFont(czcionka);
 	zatw.setFillColor(sf::Color::White);
