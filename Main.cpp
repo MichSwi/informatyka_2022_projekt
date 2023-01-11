@@ -183,22 +183,26 @@ int main()
 		}
 		if (wybranastrona == 2) {//faktyczna gra
 
-			gra.wybierzsamolot(wybranysamolot);
-
-			animacja.update(0, deltatime);
-			gra.gracz.setTextureRect(animacja.poleobrazu);
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 			window.clear(sf::Color::Blue);
+			gra.wybierzsamolot(wybranysamolot);
+			animacja.update(0, deltatime);
+			////////////////////////////////////////////CZY TO MA BYC?
+			gra.gracz.setTextureRect(animacja.poleobrazu);
+			///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (poziom.wybranygracz == 2) {
+				gra.ruchbota();
 				gra.draw_bot(window);
 			}
-			gra.ruchbota();
-
+			gra.sprawdz_kolizje();
 			gra.ruchpociskow();
 			gra.draw(window);
 			window.display();
+
 			sf::Event evn;
+
+			
+
 
 			while (window.pollEvent(evn)) {
 				if (evn.type == sf::Event::Closed || evn.key.code == sf::Keyboard::Escape)

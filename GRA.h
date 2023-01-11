@@ -21,15 +21,16 @@ public:
 	void draw(sf::RenderWindow &window);
 	void draw_bot(sf::RenderWindow& window);
 
+	int sprawdz_kolizje();
 	void ruchgracza(int i); //RUCH GRACZA
 	void ruchbota(); //RUCH BOTA
 	void ruchpociskow();
 	void strzal();
-	bool lewo[ilosc_wrogow] = { 0 };
+	bool lewo[ilosc_wrogow] = { 0 };//zmienna odpowidadjaca za zmiane predkosci po odbiciu od sciany
 	bool lewo_bota = 0;
 	void wybierzsamolot(int wybranysamolot);
 	int n = 0;
-
+	int test = 2;
 
 private:
 	sf::Vector2f pozycjabota;

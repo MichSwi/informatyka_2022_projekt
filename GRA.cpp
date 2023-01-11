@@ -28,11 +28,11 @@ GRA::GRA(float wys, float szer) {
 	bot.setTextureRect(sf::IntRect(0, 0, 60, 90));
 	bot.setPosition(1000, 500);
 
-	textura_wroga.loadFromFile("kkk.png");
+	textura_wroga.loadFromFile("sss.png");
 	wrog[0].setTexture(textura_wroga);
-	wrog[0].setTextureRect(sf::IntRect(0, 0, 120, 81));
+	wrog[0].setTextureRect(sf::IntRect(0, 0, 144, 65));
 	wrog[0].rotate(180);
-	wrog[0].setPosition(500, 400);
+	wrog[0].setPosition(1045, 200);
 
 }
 
@@ -49,8 +49,10 @@ void GRA::draw_bot(sf::RenderWindow& window) {
 }
 
 void GRA::ruchpociskow() {
-	for (int i = 0; i < ilosc_pociskow; i++) {
-		pocisk[i].move(0, -7);
+	if (test == 2 || test == 0) {
+		for (int i = 0; i < ilosc_pociskow; i++) {
+			pocisk[i].move(0, -7);
+		}
 	}
 }
 
@@ -79,6 +81,23 @@ void GRA::ruchgracza(int i) {
 		}
  }
 
+int GRA::sprawdz_kolizje() {
+	for (int i = 0; i < ilosc_pociskow; i++) {
+		sf::IntRect bullet(pocisk[i].getPosition().x, pocisk[i].getPosition().y+pocisk[i].getTextureRect().height, pocisk[i].getTextureRect().width, pocisk[i].getTextureRect().height);
+		for (int j = 0; j < ilosc_wrogow; j++) {
+	//	sf::IntRect enemy(wrog[j].getPosition().x - wrog[j].getTextureRect().width, wrog[j].getPosition().y-wrog[j].getTextureRect().height, wrog[j].getTextureRect().width, wrog[j].getTextureRect().width);
+			sf::IntRect enemy(wrog[j].getPosition().x-wrog[j].getTextureRect().width, wrog[j].getPosition().y-wrog[j].getTextureRect().height, 120, 81);
+			
+			if (bullet.intersects(enemy)) {
+				std::cout << "KOLIZJA, wrog:" << j << " pocisk" << i << std::endl;
+				return 1;
+			}
+			
+		}
+	}
+	return 0;
+}
+
 void GRA::ruchbota() {
 	pozycjabota = bot.getPosition();
 
@@ -87,7 +106,7 @@ void GRA::ruchbota() {
 
 
 		if (lewo[i] == 1) {
-			wrog[i].move(-3, 0);
+			wrog[i].move(0, 0);
 			pozycjawroga[i] = wrog[i].getPosition();
 			if (pozycjawroga[i].x < 500) {
 				lewo[i] = 0;
@@ -95,7 +114,7 @@ void GRA::ruchbota() {
 		}
 
 		if (lewo[i] == 0) {
-			wrog[i].move(3, 0);
+			wrog[i].move(0, 0);
 			pozycjawroga[i] = wrog[i].getPosition();
 			if (pozycjawroga[i].x > 1500) {
 				lewo[i] = 1;
