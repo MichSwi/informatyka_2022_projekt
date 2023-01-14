@@ -56,7 +56,6 @@ void MENU::wGore() {
 
 		pozycjeMenu[menuWybrane].setFillColor(sf::Color::White);
 		menuWybrane--;
-		//	std::cout << "--" << menuWybrane << "--\n";
 		if (menuWybrane == -1) {
 			menuWybrane = 3;
 		}

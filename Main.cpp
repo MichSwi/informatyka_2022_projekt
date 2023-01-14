@@ -7,7 +7,9 @@
 
 int wybranastrona = 0;
 int wybranysamolot = 0;
+bool sojusznik;
 bool wyswietlPomoc = 0;
+
 
 int main()
 {
@@ -40,6 +42,10 @@ int main()
 	ANIMACJA szary_menu(&poziom.samolot_textura[0], sf::Vector2u(2, 1), 0.6f);
 	ANIMACJA czarny_menu(&poziom.samolot_textura[1], sf::Vector2u(2, 1), 0.6f);
 	ANIMACJA papierowy_menu(&poziom.samolot_textura[2], sf::Vector2u(2, 1), 0.6f);
+
+	ANIMACJA czerwony_wrog(&gra.textura_wroga[0], sf::Vector2u(2, 1), 0.6f);
+	ANIMACJA heli_wrog1(&gra.textura_wroga[1], sf::Vector2u(2, 1), 0.3f);
+	ANIMACJA heli_wrog2(&gra.textura_wroga[2], sf::Vector2u(2, 1), 0.3f);
 	
 
 
@@ -149,7 +155,7 @@ int main()
 						case sf::Keyboard::Return:
 							if (!wyswietlPomoc) {
 								poziom.Enter();
-								if (poziom.stan() == 1) {//powrote
+								if (poziom.stan() == 1) {//powrot
 									poziom.pow = 0;
 									wybranastrona = 0;
 									std::cout << "powrot\n";
@@ -157,7 +163,6 @@ int main()
 								if (poziom.stan() == 2 && poziom.licznik == 0) {//start
 									wybranysamolot = poziom.wybranysamolot;
 									wybranastrona = 2;
-									std::cout << "start\n";
 								}
 							}
 							break;
@@ -182,27 +187,33 @@ int main()
 			}
 		}
 		if (wybranastrona == 2) {//faktyczna gra
-
-
+			sojusznik = poziom.sojusznik;
 			window.clear(sf::Color::Blue);
-			gra.wybierzsamolot(wybranysamolot);
+			if(gra.hp_gracza==-10)
+				gra.zaladujustawienia(wybranysamolot);//przypisanie graczowi danej tekstury
+			if (gra.hp_gracza == 0)
+				wybranastrona = 0;
 			animacja.update(0, deltatime);
-			////////////////////////////////////////////CZY TO MA BYC?
+
+			gra.wrog[0].setTextureRect(czerwony_wrog.poleobrazu);
+			czerwony_wrog.update(0, deltatime);
+			heli_wrog1.update(0, deltatime);
+			heli_wrog2.update(0, deltatime);
+
+			//////////////////////////////////////////// TO MA BYC
 			gra.gracz.setTextureRect(animacja.poleobrazu);
-			///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			if (poziom.wybranygracz == 2) {
-				gra.ruchbota();
-				gra.draw_bot(window);
-			}
+			gra.wrog[1].setTextureRect(heli_wrog1.poleobrazu);
+			gra.wrog[2].setTextureRect(heli_wrog2.poleobrazu);
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			
+			gra.ruchbota();
 			gra.sprawdz_kolizje();
-			gra.ruchpociskow();
+			gra.ruchpociskow(deltatime);
 			gra.draw(window);
 			window.display();
 
 			sf::Event evn;
-
-			
-
 
 			while (window.pollEvent(evn)) {
 				if (evn.type == sf::Event::Closed || evn.key.code == sf::Keyboard::Escape)

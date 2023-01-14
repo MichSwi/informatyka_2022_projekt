@@ -7,25 +7,25 @@ trudnosc::trudnosc(float wys, float szer) {
 		std::cout << "Brak czcionki\n";
 	}
 
-	//1 czy 2 graczy
+	//sojusznik czy samemu?
 	text1.setFont(czcionka);
 	text1.setFillColor(sf::Color::White);
 	text1.setCharacterSize(70);
-	text1.setString("Wybierz ilosc graczy:");
+	text1.setString("Czy chcesz miec sojusznika?");
 	text1.setPosition(300, 100);
 
-	//1 gracz 
+	//samemu 
 	gracz[0].setFont(czcionka);
 	gracz[0].setFillColor(sf::Color::Red);
 	gracz[0].setCharacterSize(70);
-	gracz[0].setString("1 gracz");
+	gracz[0].setString("Nie");
 	gracz[0].setPosition(200, 200);
 
-	//2 graczy
+	//z sojusznikiem
 	gracz[1].setFont(czcionka);
 	gracz[1].setFillColor(sf::Color::White);
 	gracz[1].setCharacterSize(70);
-	gracz[1].setString("2 graczy");
+	gracz[1].setString("Tak");
 	gracz[1].setPosition(400, 200);
 
 	//Wybierz samolot
@@ -53,22 +53,20 @@ trudnosc::trudnosc(float wys, float szer) {
 	samolot[2].setString("samolot 2");
 	samolot[2].setPosition(525, 400);
 
-	samolot_textura[0].loadFromFile("rdy_szary_idle.png");
+	samolot_textura[0].loadFromFile("gracz_szary_idle.png");
+	samolot_sprite[0].scale(2, 2);
 	samolot_sprite[0].setTexture(samolot_textura[0]);
-	samolot_sprite[0].setTextureRect(sf::IntRect(0, 0, 216, 205));
-	samolot_sprite[0].setPosition(200, 500);
+	samolot_sprite[0].setPosition(1000, 200);
 
-	samolot_textura[1].loadFromFile("ten nie pixel.png");
+	samolot_textura[1].loadFromFile("gracz_nie_pixel.png");
 	samolot_sprite[1].setTexture(samolot_textura[1]);
-	samolot_sprite[1].setTextureRect(sf::IntRect(0, 0, 216, 185));
-	samolot_sprite[1].setPosition(350, 500);
+	samolot_sprite[1].setPosition(1000, 200);
+	samolot_sprite[1].scale(2, 2);
 
-
-	samolot_textura[2].loadFromFile("paap.png");
+	samolot_textura[2].loadFromFile("gracz_paap.png");
 	samolot_sprite[2].setTexture(samolot_textura[2]);
-	samolot_sprite[2].setTextureRect(sf::IntRect(0, 0, 217, 104));
-	samolot_sprite[2].setPosition(525, 500);
-
+	samolot_sprite[2].setPosition(1000, 200);
+	samolot_sprite[2].scale(2.6, 2.6);
 
 	//NAPIS ZATWIERDZ
 	zatw.setFont(czcionka);
@@ -83,6 +81,17 @@ trudnosc::trudnosc(float wys, float szer) {
 	powr.setCharacterSize(70);
 	powr.setString("Powrot");
 	powr.setPosition(450, 700);
+
+	//STATYSTYKI
+	for (int i = 0; i < 3; i++) {
+		statystyki[i].setFont(czcionka);
+		statystyki[i].setFillColor(sf::Color::White);
+		statystyki[i].setCharacterSize(90);
+		statystyki[i].setPosition(1000, 600);
+	}
+	statystyki[0].setString("predkosc:x\nobrazenia:y\nwytrzymalosc:z");
+	statystyki[1].setString("predkosc:x\nobrazenia:y\nwytrzymalosc:z");
+	statystyki[2].setString("predkosc:x\nobrazenia:y\nwytrzymalosc:z");
 }
 void trudnosc::draw(sf::RenderWindow &window) {
 	window.draw(text1);
@@ -90,8 +99,21 @@ void trudnosc::draw(sf::RenderWindow &window) {
 	window.draw(gracz[1]);
 	window.draw(text2);
 	for (int i = 0; i < 3; i++) {
-		window.draw(samolot_sprite[i]);
 		window.draw(samolot[i]);
+	}
+	switch (rysuj_staty) {
+	case 0:
+		window.draw(statystyki[0]);
+		window.draw(samolot_sprite[0]);
+		break;
+	case 1:
+		window.draw(statystyki[1]);
+		window.draw(samolot_sprite[1]);
+		break;
+	case 2: 
+		window.draw(statystyki[2]);
+		window.draw(samolot_sprite[2]);
+		break;
 	}
 	window.draw(zatw);
 	window.draw(powr);
@@ -104,8 +126,7 @@ void trudnosc::Enter() {
 	if (licznik == 3) {
 		licznik = 0;
 	}
-//	std::cout << licznik;
-	if(licznik==0 && wybranygracz==1){										//LINIA 0 - 1 GRACZ / 2 GRACZY
+	if(licznik==0 && sojusznik==1){						//LINIA 0 - SAMEMU / Z SOJUSZNIKIEM
 		gracz[0].setFillColor(sf::Color::Red);
 		//wybranygracz = 1;//domyslnie wybierany 1 gracz
 	}
@@ -113,6 +134,7 @@ void trudnosc::Enter() {
 	if (licznik == 1) {									//LINIA 1 - SAMOLOT 1/2/3
 		samolot[1].setFillColor(sf::Color::Red);
 		wybranysamolot = 1;//domyslnie wybierany srodkowy samolot
+		rysuj_staty = 1;
 	}
 	if (licznik == 2) {
 		zatw.setFillColor(sf::Color::Red);
@@ -126,6 +148,7 @@ void trudnosc::Enter() {
 		samolot[2].setFillColor(sf::Color::White);
 		powr.setFillColor(sf::Color::White);
 		zatw.setFillColor(sf::Color::White);
+		rysuj_staty = -1;
 	}
 }
 
@@ -135,7 +158,7 @@ void trudnosc::wLewo() {
 		pow = 0;
 		gracz[0].setFillColor(sf::Color::Red);
 		gracz[1].setFillColor(sf::Color::White);
-		wybranygracz = 1;//1gracz
+		sojusznik = 1;//1gracz
 	}
 	if (licznik == 1 && wybranysamolot == 1) {	//wybor samolotu
 		pow = 0;		
@@ -143,6 +166,7 @@ void trudnosc::wLewo() {
 		samolot[1].setFillColor(sf::Color::White);
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 0;
+		rysuj_staty = 0;
 	//	std::cout << wybranysamolot;
 
 	}
@@ -151,6 +175,7 @@ void trudnosc::wLewo() {
 		samolot[1].setFillColor(sf::Color::Red);
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 1;
+		rysuj_staty = 1;
 		//std::cout << wybranysamolot;
 
 	}
@@ -166,13 +191,14 @@ void trudnosc::wPrawo() {
 	if (licznik == 0) {							//wybor 1gracz/2graczy
 		gracz[0].setFillColor(sf::Color::White);
 		gracz[1].setFillColor(sf::Color::Red);
-		wybranygracz = 2;//2 graczy
+		sojusznik = 2;//2 graczy
 	}
 	if (licznik == 1 && wybranysamolot == 1) {	//wybor samolotow
 		samolot[0].setFillColor(sf::Color::White);
 		samolot[1].setFillColor(sf::Color::White);
 		samolot[2].setFillColor(sf::Color::Red);
 		wybranysamolot = 2;
+		rysuj_staty = 2;
 		//std::cout << wybranysamolot;
 
 	}
@@ -181,6 +207,7 @@ void trudnosc::wPrawo() {
 		samolot[1].setFillColor(sf::Color::Red);
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 1;
+		rysuj_staty = 1;
 		//std::cout << wybranysamolot;
 
 	}
