@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 
 #define ilosc_pociskow_gracza 20
 #define ilosc_wrogow 6
@@ -41,7 +42,8 @@ public:
 	bool lewo[ilosc_wrogow] = { 0,1,0,1,0,1 }; //zmienna odpowidadjaca za zmiane predkosci po odbiciu od sciany
 	bool lewo_bota = 0;
 	void zaladujustawienia(int wybranysamolot);
-	int n = 0;
+	int licznik_pociskow_gracza = 0;
+	int punkty = 0;
 	float calyczas[ilosc_wrogow] = {0,0,0,0,0,0};
 	float przeladowanie_sojusznika = 0;
 	int licznik_pociskow = 0;
@@ -50,11 +52,15 @@ public:
 	int hp_wroga[ilosc_wrogow] = { 5,2,2,12,7,7 };
 	float v_wroga[ilosc_wrogow] = { 5,4,4,1.6,5,5 };
 	float przeladowanie[ilosc_wrogow] = { 2,2,2,2,2,2 }; // w sekundach
-	int test;
+	void aktualizajca_punktow();
 
 private:
 	sf::Vector2f pozycjabota;
 	sf::Vector2f pozycjagracza;
 	sf::Vector2f pozycjawroga[ilosc_pociskow_gracza];
+	sf::Font czcionka;
+	sf::Text punktacja;
+	sf::Text gameover_text;
+	std::string punkty_string;
 };
 

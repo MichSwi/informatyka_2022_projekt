@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ANIMACJA.cpp" />
+    <ClCompile Include="GAME_OVER.cpp" />
     <ClCompile Include="GRA.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MENU.cpp" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ANIMACJA.h" />
+    <ClInclude Include="GAME_OVER.h" />
     <ClInclude Include="GRA.h" />
     <ClInclude Include="MENU.h" />
     <ClInclude Include="trudnosc.h" />
