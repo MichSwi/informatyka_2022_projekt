@@ -17,6 +17,9 @@ public:
 	bool sojusznik = 0;
 	int wybranysamolot = 1;
 	int pow = 0;//   1-powrot   2-zatwierdz
+	int daj_wybranysamolot() {
+		return wybranysamolot;
+	}
 
 	sf::Texture samolot_textura[3];
 	sf::Sprite samolot_sprite[3];

@@ -26,7 +26,7 @@ void GAME_OVER::update() {
 
 	
 
-	napis.setString( "Twoj samolot zostal zestrzelony.\n     Twoj wynik: " + punkty_string);
+	napis.setString( "Twoj samolot zostal zestrzelony.\n     Twoj wynik: " + punkty_string+"\nNacisnij enter aby kontynuowac.");
 
 }
 

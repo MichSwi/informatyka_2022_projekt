@@ -7,19 +7,27 @@ extern int wybranysamolot;
 extern bool sojusznik;
 
 //================================================
-//potrzebne do zatrzymania przeciwnikow i pociskow                          <---------------------------
+//potrzebne do zatrzymania przeciwnikow i pociskow                   <---------------------------
 //================================================
 
 GRA::GRA(float wys, float szer) {
+
+		//POCISKI GRACZA i sojusznika
 	textura_pocisku.loadFromFile("bullet.png");
 	for (int i = 0; i < ilosc_pociskow_gracza; i++) {
 		pocisk[i].setTextureRect(sf::IntRect(0, 0, 9, 41));
 		pocisk[i].setTexture(textura_pocisku);
-		pocisk[i].setPosition(-20,-20);
+		pocisk[i].setPosition(-200,-200);
+	}
+	for (int i = 0; i < ilosc_sojuszniczych_pociskow; i++) {
+		sojuszniczy_pocisk[i].setTexture(textura_pocisku);
+		sojuszniczy_pocisk[i].setPosition(-10, -10);
 	}
 
+	textura_szybkiego_pocisku.loadFromFile("bullet-wdol.png");
+
+
 	gracz.setPosition(100, 900);
-	//gracz.setTextureRect(sf::IntRect(0, 0, 216, 185));
 
 	textura_gracza[0].loadFromFile("gracz_szary_idle.png");
 	textura_gracza[1].loadFromFile("gracz_nie_pixel.png");
@@ -54,9 +62,12 @@ GRA::GRA(float wys, float szer) {
 	wrog[5].setPosition(300, 50);
 
 
-	textura_szybkiego_pocisku.loadFromFile("bullet.png");
-	///////WOLNY TEXTURA
-	textura_wolnego_pocisku.loadFromFile("bullet.png");
+	//RAKIETY
+	textura_rakiety.loadFromFile("missle.png");
+	for (int i = 0; i < ilosc_rakiet; i++) {
+		rakieta[i].setTexture(textura_rakiety);
+		rakieta[i].setPosition(4000,-200);
+	}
 
 	czcionka.loadFromFile("czcionka.ttf");
 	punktacja.setFont(czcionka);
@@ -66,23 +77,15 @@ GRA::GRA(float wys, float szer) {
 	punktacja.setFillColor(sf::Color::Red);
 	punktacja.setString("0");
 	punktacja.setPosition(1800, 10);
-
 	
-	
-
-	for (int i = 0; i < ilosc_sojuszniczych_pociskow; i++) {
-		sojuszniczy_pocisk[i].setTexture(textura_szybkiego_pocisku);
-		sojuszniczy_pocisk[i].setPosition(-10, -10);
-	}
 	
 	for (int i = 0; i < ilosc_szybkich_pociskow; i++) {
 		wrogi_szybki_pocisk[i].setTexture(textura_szybkiego_pocisku);
 		wrogi_szybki_pocisk[i].setTextureRect(sf::IntRect(0, 0, 9, 41));
-		//wrogi_szybki_pocisk[i].setPosition(10*i, 10);
 	}
 
 	for (int i = 0; i < 5; i++) {
-		wrogi_wolny_pocisk[i].setTexture(textura_wolnego_pocisku);
+		rakieta[i].setTexture(textura_rakiety);
 	}
 }
 
@@ -105,6 +108,9 @@ void GRA::draw(sf::RenderWindow& window) {
 			window.draw(sojuszniczy_pocisk[i]);
 		}
 	}
+	for (int i = 0; i < ilosc_rakiet; i++) {
+		window.draw(rakieta[i]);
+	}
 }
 
 void GRA::aktualizajca_punktow() {
@@ -122,7 +128,7 @@ void GRA::ruchpociskow(float deltatime) {
 		calyczas[t] = calyczas[t] + deltatime;
 	}
 
-	
+	//STRZALY PRZECIWNIKOW
 	for (int i = 0; i < ilosc_wrogow; i++) {
 		if (i == 3)
 			continue;//ominiecie bombera
@@ -137,11 +143,11 @@ void GRA::ruchpociskow(float deltatime) {
 		
 	}
 	
-	
+	//aktualizacja czasu
 	for (int t = 0; t < ilosc_wrogow; t++) {
 		calyczas[t] = calyczas[t] + deltatime;
 	}
-
+	//ruch pociskow gracza
 	for (int i = 0; i < ilosc_pociskow_gracza; i++) {
 		pocisk[i].move(0, -7);
 	}
@@ -158,15 +164,33 @@ void GRA::ruchpociskow(float deltatime) {
 		}
 	}
 
-	//Strzelanie sojusznika
-	przeladowanie_sojusznika = przeladowanie_sojusznika + deltatime;
-	if (przeladowanie_sojusznika > 2.8f) {
+	//RUCH RAKIET
+	for (int i = 0; i < ilosc_rakiet; i++) {
+		rakieta[i].move(0,2.6f);
+	}
+
+	//przeladowanie sojusznika
+	calyczas_sojusznika = calyczas_sojusznika + deltatime;
+	if (calyczas_sojusznika > przeladowanie_sojusznika) {
 		sojuszniczy_pocisk[licznik_sojuszniczych].setPosition(bot.getPosition().x + bot.getTextureRect().width / 2 - 4, bot.getPosition().y -45);
-		przeladowanie_sojusznika = 0;
+		calyczas_sojusznika = 0;
 		licznik_sojuszniczych++;
 		if (licznik_sojuszniczych == ilosc_sojuszniczych_pociskow)
 			licznik_sojuszniczych = 0;
 	}
+
+	//przeladownie bombera
+	if (calyczas[3] > przeladowanie[3]) {
+		rakieta[licznik_rakiet].setPosition(wrog[3].getPosition().x + wrog[3].getTextureRect().width / 2-10, wrog[3].getPosition().y + wrog[3].getTextureRect().width - 60);
+		licznik_rakiet++;
+		calyczas[3] = 0;
+		if (licznik_rakiet == ilosc_rakiet) {
+			licznik_rakiet = 0;
+		}
+
+		
+	}
+
 }
 
 void GRA::zaladujustawienia(int wybranysamolot) {
@@ -200,6 +224,15 @@ void GRA::ruchgracza(int i) {
 		}
  }
 
+void GRA::respawn() {
+	for (int i = 0; i < ilosc_wrogow; i++) {
+		if (wrog[i].getPosition().x <50) {
+			wrog[i].move(abs(v_wroga[i]), 0);
+		}
+	}
+}
+
+
 int GRA::sprawdz_kolizje() {
 
 	//KOLIZJE POCISKOW SOJUSZNIKA Z PRZECIWNIKAMI
@@ -210,7 +243,7 @@ int GRA::sprawdz_kolizje() {
 				if (bullet_sojusz.intersects(enemy)) {
 					hp_wroga[j]--;
 					if (hp_wroga[j] == 0) {
-						wrog[j].setPosition(3000, 3000);
+						wrog[j].setPosition(-4000, wrog[j].getPosition().y);
 					}
 					sojuszniczy_pocisk[i].setPosition(-3000, -3000);
 					std::cout << "\nsojusznik trafil wroga " << j << ",zostalo mu hp:" << hp_wroga[j];
@@ -231,6 +264,15 @@ int GRA::sprawdz_kolizje() {
 			wrogi_szybki_pocisk[i].setPosition(-3000, 3000);
 		}
 	}
+	//KOLIZJE RAKIET Z GRACZEM
+	for (int i = 0; i < ilosc_rakiet; i++) {
+		sf::IntRect missle(rakieta[i].getPosition().x, rakieta[i].getPosition().y, rakieta[i].getTextureRect().width, rakieta[i].getTextureRect().height);
+		if (player.intersects(missle)) {
+			hp_gracza = 0;
+			std::cout << "\n\n--RAKIETA CIE TRAFILA--\n\n";
+			rakieta[i].setPosition(-300, 4000);
+		}
+	}
 	
 	//KOLIZJE POCISKOW GRACZA Z PRZECIWNIKAMI
 	for (int i = 0; i < ilosc_pociskow_gracza; i++) {
@@ -241,7 +283,7 @@ int GRA::sprawdz_kolizje() {
 				hp_wroga[j]--;
 				std::cout << "\nwrogowi" << j << " zostalo: " << hp_wroga[j];
 				if (hp_wroga[j] == 0) {
-					wrog[j].setPosition(3000, 3000);
+					wrog[j].setPosition(-4000, wrog[j].getPosition().y);
 					punkty++;
 				}
 				pocisk[i].setPosition(-3000, -3000);
@@ -278,7 +320,7 @@ void GRA::ruchbota() {
 	if (lewo_bota == 1) {
 		bot.move(-3, 0);
 		pozycjabota = bot.getPosition();
-		if (pozycjabota.x > 1920-bot.getTextureRect().width-50) {
+		if (pozycjabota.x <50) {
 			lewo_bota = 0;
 		}
 	}
@@ -286,7 +328,7 @@ void GRA::ruchbota() {
 	if (lewo_bota == 0) {
 		bot.move(3, 0);
 		pozycjabota = bot.getPosition();
-		if (pozycjabota.x < 50) {
+		if (pozycjabota.x > 1920 - bot.getTextureRect().width - 50) {
 			lewo_bota = 1;
 		}
 	}
@@ -298,4 +340,12 @@ void GRA::strzal() {
 	pocisk[licznik_pociskow_gracza].setPosition(gracz.getPosition());
 	pocisk[licznik_pociskow_gracza].move(49, 0);
 	licznik_pociskow_gracza++;
+}
+
+void GRA::petla_glowna(float deltatime) {
+	respawn();
+	ruchbota();
+	sprawdz_kolizje();
+	ruchpociskow(deltatime);
+	aktualizajca_punktow();
 }

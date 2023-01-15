@@ -19,9 +19,13 @@ int rekord;
 
 
 
+//while(window.isopen() w klasach, deklarowac kolejne obiekty klas w obiektach wczesniejszej klasy
+
+
+
 int main()
 {	
-	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Moja GRA", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Moja GRA", sf::Style::Fullscreen);
 	window.setFramerateLimit(60);
 
 
@@ -203,6 +207,7 @@ int main()
 			if (gra.hp_gracza == -10)
 				gra.zaladujustawienia(wybranysamolot);//przypisanie graczowi danej tekstury
 			if (gra.hp_gracza == 0) {
+				gra.hp_gracza = -10;
 				window.clear(sf::Color::White);
 				nowe_punkty = gra.punkty;
 				std::cout << "nowe punkty to:" << nowe_punkty;
@@ -219,20 +224,27 @@ int main()
 			gra.gracz.setTextureRect(animacja.poleobrazu);
 			gra.wrog[1].setTextureRect(heli_wrog1.poleobrazu);
 			gra.wrog[2].setTextureRect(heli_wrog2.poleobrazu);
-
 			////////////////////////////////////////////////////////////////////////////////////////
-			gra.aktualizajca_punktow();
-			gra.ruchbota();
-			gra.sprawdz_kolizje();
-			gra.ruchpociskow(deltatime);
+
+			gra.petla_glowna(deltatime);
 			gra.draw(window);
 			window.display();
 
 			sf::Event evn;
 
 			while (window.pollEvent(evn)) {
-				if (evn.type == sf::Event::Closed || evn.key.code == sf::Keyboard::Escape)
+				if (evn.type == sf::Event::Closed || evn.key.code == sf::Keyboard::Escape) {
 					window.close();
+					//???????
+					nowe_punkty = gra.punkty;
+					if (rekord < nowe_punkty) {
+						std::ofstream zapis;
+						zapis.open("dane.txt");
+						zapis << nowe_punkty;
+						zapis.close();
+					}
+
+				}
 				if (evn.type == sf::Event::KeyReleased && evn.key.code == sf::Keyboard::Space) {
 					gra.strzal();
 				}
