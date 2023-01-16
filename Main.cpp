@@ -1,19 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include <fstream>
+#include <SFML/Graphics.hpp> 
 #include "MENU.h"
-#include "TRUDNOSC.h"
-#include "GRA.h"
-
-
 int main() {
-	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Moja GRA", sf::Style::Default);
-	window.setFramerateLimit(60);
-
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Pixel Dogfight", sf::Style::Fullscreen);
 	MENU glownemenu;
-
 	glownemenu.petlaglowna(window);
-
-
 	return 0;
 }

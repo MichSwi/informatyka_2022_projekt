@@ -15,7 +15,7 @@
 class GRA
 {
 public:
-	GRA(float wys, float szer, bool czy_sojusznik, bool ktory_samolot);
+	GRA(bool czy_sojusznik, int ktory_samolot);
 
 	sf::Sprite gracz,
 		bot,
@@ -23,7 +23,8 @@ public:
 		pocisk[ilosc_pociskow_gracza],
 		sojuszniczy_pocisk[ilosc_sojuszniczych_pociskow],
 		wrogi_szybki_pocisk[ilosc_szybkich_pociskow],
-		rakieta[ilosc_rakiet];
+		rakieta[ilosc_rakiet],
+		pomoc;
 
 	sf::Texture textura_gracza[3],
 		textura_wroga[ilosc_wrogow],
@@ -36,15 +37,12 @@ public:
 	float v; // PREDKOSC gracza
 	void draw(sf::RenderWindow& window);
 
-	//nowe
-	void petlaglowna(sf::RenderWindow& window);
+	int petlaglowna(sf::RenderWindow& window);
 	bool sojusznik;
 	int wybranysamolot;
 	float deltatime = 0.0f;
 	sf::Clock zegar;
 	int rekord, nowe_punkty;
-	//koniec nowe
-
 
 	int sprawdz_kolizje();
 	void ruchgracza(int i); //RUCH GRACZA
@@ -64,13 +62,18 @@ public:
 	int licznik_pociskow = 0;
 	int licznik_sojuszniczych = 0;
 	int hp_gracza = -10;//NIE ZALADOWANO HP Z WYBORU SAMOLOTU
-	const int max_hp_wroga[ilosc_wrogow] = { 5,2,2,12,7,7 };
-	int hp_wroga[ilosc_wrogow] = { 5,2,2,12,7,7 };
-	float v_wroga[ilosc_wrogow] = { 5,4,4,1.6,5,5 };
-	float przeladowanie[ilosc_wrogow] = { 2,2,2,2,2,2 }; // w sekundach
-	void aktualizajca_punktow();
+	int dmg_gracza;
 
+	//   0-czerw    1,2-heli   3-bomber   4-zielony   5-niebieski
+
+	const int max_hp_wroga[ilosc_wrogow] = { 4,2,2,12,7,7 };
+	int hp_wroga[ilosc_wrogow] = { 4,2,2,12,7,7 };
+	float v_wroga[ilosc_wrogow] = { 3.5,5,5,2.2,4,4 };
+	float przeladowanie[ilosc_wrogow] = { 2,0.8,0.8,2.5,2,2 }; // w sekundach
+	void aktualizajca_punktow();
+	void draw_pomoc(sf::RenderWindow &window);
 	void petla_glowna(float deltatime);
+	bool help;
 private:
 	sf::Vector2f pozycjabota;
 	sf::Vector2f pozycjagracza;
@@ -79,4 +82,6 @@ private:
 	sf::Text punktacja;
 	sf::Text gameover_text;
 	std::string punkty_string;
+
+	sf::Texture textura_pomocy;
 };

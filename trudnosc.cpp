@@ -6,58 +6,56 @@
 
 //RYSOWANIE I UZYWANIE USTAWIEN GRY PO WYBRANIU "ROZPOCZNIJ" W GLOWNYM MENU
 
-TRUDNOSC::TRUDNOSC(float wys, float szer) {
+TRUDNOSC::TRUDNOSC() {
 	if (!czcionka.loadFromFile("czcionka.ttf")) {
 		std::cout << "Brak czcionki\n";
 	}
-
-
 
 	//sojusznik czy samemu?
 	text1.setFont(czcionka);
 	text1.setFillColor(sf::Color::White);
 	text1.setCharacterSize(70);
 	text1.setString("Czy chcesz miec sojusznika?");
-	text1.setPosition(300, 100);
+	text1.setPosition(180, 100);
 
 	//samemu 
 	gracz[0].setFont(czcionka);
 	gracz[0].setFillColor(sf::Color::Red);
 	gracz[0].setCharacterSize(70);
 	gracz[0].setString("Nie");
-	gracz[0].setPosition(200, 200);
+	gracz[0].setPosition(300, 200);
 
 	//z sojusznikiem
 	gracz[1].setFont(czcionka);
 	gracz[1].setFillColor(sf::Color::White);
 	gracz[1].setCharacterSize(70);
 	gracz[1].setString("Tak");
-	gracz[1].setPosition(400, 200);
+	gracz[1].setPosition(500, 200);
 
 	//Wybierz samolot
 	text2.setFont(czcionka);
 	text2.setFillColor(sf::Color::White);
 	text2.setCharacterSize(70);
 	text2.setString("Wybierz samolot:");
-	text2.setPosition(300, 300);
+	text2.setPosition(280, 400);
 
 	samolot[0].setFont(czcionka);
 	samolot[0].setFillColor(sf::Color::White);
 	samolot[0].setCharacterSize(50);
 	samolot[0].setString("samolot 0");
-	samolot[0].setPosition(175, 400);
+	samolot[0].setPosition(175, 500);
 
 	samolot[1].setFont(czcionka);
 	samolot[1].setFillColor(sf::Color::White);
 	samolot[1].setCharacterSize(50);
 	samolot[1].setString("samolot 1");
-	samolot[1].setPosition(350, 400);
+	samolot[1].setPosition(350, 500);
 
 	samolot[2].setFont(czcionka);
 	samolot[2].setFillColor(sf::Color::White);
 	samolot[2].setCharacterSize(50);
 	samolot[2].setString("samolot 2");
-	samolot[2].setPosition(525, 400);
+	samolot[2].setPosition(525, 500);
 
 	samolot_textura[0].loadFromFile("gracz_szary_idle.png");
 	samolot_sprite[0].scale(2, 2);
@@ -74,6 +72,11 @@ TRUDNOSC::TRUDNOSC(float wys, float szer) {
 	samolot_sprite[2].setPosition(1000, 200);
 	samolot_sprite[2].scale(2.6, 2.6);
 
+	sojusznik_textura.loadFromFile("bot.png");
+	sojusznik_sprite.setTexture(sojusznik_textura);
+	sojusznik_sprite.setPosition(1050, 250);
+	sojusznik_sprite.scale(2, 2);
+
 	//NAPIS ZATWIERDZ
 	zatw.setFont(czcionka);
 	zatw.setFillColor(sf::Color::White);
@@ -86,7 +89,7 @@ TRUDNOSC::TRUDNOSC(float wys, float szer) {
 	powr.setFillColor(sf::Color::White);
 	powr.setCharacterSize(70);
 	powr.setString("Powrot");
-	powr.setPosition(450, 700);
+	powr.setPosition(480, 700);
 
 	//STATYSTYKI
 	for (int i = 0; i < 3; i++) {
@@ -95,11 +98,18 @@ TRUDNOSC::TRUDNOSC(float wys, float szer) {
 		statystyki[i].setCharacterSize(90);
 		statystyki[i].setPosition(1000, 600);
 	}
-	statystyki[0].setString("predkosc:x\nobrazenia:y\nwytrzymalosc:z");
-	statystyki[1].setString("predkosc:x\nobrazenia:y\nwytrzymalosc:z");
-	statystyki[2].setString("predkosc:x\nobrazenia:y\nwytrzymalosc:z");
+	statystyki[0].setString("Predkosc:15\nObrazenia:3\nWytrzymalosc:20");
+	statystyki[1].setString("Predkosc:7\nObrazenia:2\nWytrzymalosc:8");
+	statystyki[2].setString("Predkosc:3.5\nObrazenia:1\nWytrzymalosc:1");
 
+	sojusznik_staty.setFont(czcionka);
+	sojusznik_staty.setString("Predkosc:3\nObrazenia:1\nWytrzymalosc:+inf\nPrzeladowanie: 0.5s");
+	sojusznik_staty.setCharacterSize(80);
+	sojusznik_staty.setPosition(1000, 460);
+	sojusznik_staty.setFillColor(sf::Color::White);
 
+	sojusznik = 0;
+	rysuj_sojusznika = 0;
 
 
 }
@@ -125,6 +135,10 @@ void TRUDNOSC::draw(sf::RenderWindow& window) {
 		window.draw(samolot_sprite[2]);
 		break;
 	}
+	if (rysuj_sojusznika) {
+		window.draw(sojusznik_sprite);
+		window.draw(sojusznik_staty);
+	}
 	window.draw(zatw);
 	window.draw(powr);
 }
@@ -138,10 +152,11 @@ void TRUDNOSC::Enter() {
 	}
 	if (licznik == 0 && sojusznik == 1) {						//LINIA 0 - SAMEMU / Z SOJUSZNIKIEM
 		gracz[0].setFillColor(sf::Color::Red);
-		//wybranygracz = 1;//domyslnie wybierany 1 gracz
+		rysuj_sojusznika = 1;
 	}
 
 	if (licznik == 1) {									//LINIA 1 - SAMOLOT 1/2/3
+		rysuj_sojusznika = 0;
 		samolot[1].setFillColor(sf::Color::Red);
 		wybranysamolot = 1;//domyslnie wybierany srodkowy samolot
 		rysuj_staty = 1;
@@ -168,7 +183,9 @@ void TRUDNOSC::wLewo() {
 		pow = 0;
 		gracz[0].setFillColor(sf::Color::Red);
 		gracz[1].setFillColor(sf::Color::White);
-		sojusznik = 1;//1gracz
+		sojusznik = 0;
+		rysuj_sojusznika = 0;
+		
 	}
 	if (licznik == 1 && wybranysamolot == 1) {	//wybor samolotu
 		pow = 0;
@@ -177,6 +194,7 @@ void TRUDNOSC::wLewo() {
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 0;
 		rysuj_staty = 0;
+
 		//	std::cout << wybranysamolot;
 
 	}
@@ -186,6 +204,7 @@ void TRUDNOSC::wLewo() {
 		samolot[2].setFillColor(sf::Color::White);
 		wybranysamolot = 1;
 		rysuj_staty = 1;
+
 		//std::cout << wybranysamolot;
 
 	}
@@ -201,7 +220,8 @@ void TRUDNOSC::wPrawo() {
 	if (licznik == 0) {							//wybor 1gracz/2graczy
 		gracz[0].setFillColor(sf::Color::White);
 		gracz[1].setFillColor(sf::Color::Red);
-		sojusznik = 2;//2 graczy
+		sojusznik = 1;//2 graczy
+		rysuj_sojusznika = 1;
 	}
 	if (licznik == 1 && wybranysamolot == 1) {	//wybor samolotow
 		samolot[0].setFillColor(sf::Color::White);
@@ -209,6 +229,7 @@ void TRUDNOSC::wPrawo() {
 		samolot[2].setFillColor(sf::Color::Red);
 		wybranysamolot = 2;
 		rysuj_staty = 2;
+
 		//std::cout << wybranysamolot;
 
 	}
@@ -234,37 +255,12 @@ int TRUDNOSC::petlaglowna(sf::RenderWindow& window) {
 	ANIMACJA papierowy_menu(&samolot_textura[2], sf::Vector2u(2, 1), 0.6f);
 
 
-
-
 	while (window.isOpen()) {
 
 		deltatime = zegar.restart().asSeconds();
 
 		window.clear();
-		//DRAW
-		window.draw(text1);
-		window.draw(gracz[0]);
-		window.draw(gracz[1]);
-		window.draw(text2);
-		for (int i = 0; i < 3; i++) {
-			window.draw(samolot[i]);
-		}
-		switch (rysuj_staty) {
-		case 0:
-			window.draw(statystyki[0]);
-			window.draw(samolot_sprite[0]);
-			break;
-		case 1:
-			window.draw(statystyki[1]);
-			window.draw(samolot_sprite[1]);
-			break;
-		case 2:
-			window.draw(statystyki[2]);
-			window.draw(samolot_sprite[2]);
-			break;
-		}
-		window.draw(zatw);
-		window.draw(powr);
+		draw(window);
 
 		czarny_menu.update(0, deltatime);
 		szary_menu.update(0, deltatime);
@@ -292,23 +288,17 @@ int TRUDNOSC::petlaglowna(sf::RenderWindow& window) {
 					Enter();
 					if (stan() == 1) {//powrot
 						pow = 0;
-						return 10;
-						//wybranastrona = 0;
+						return 1;////POWROT
 						std::cout << "powrot\n";
 					}
 					if (stan() == 2 && licznik == 0) {//start
-						std::cout << "NEXT";
-						GRA gra(1, 1, sojusznik, wybranysamolot);
-						gra.petlaglowna(window);
-						//wybranysamolot = poziom.wybranysamolot;
-						//wybranastrona = 2;
+						GRA gra(sojusznik, wybranysamolot);
+						if (gra.petlaglowna(window))
+							return 1;
 					}
-
 					break;
 				case sf::Keyboard::Left:
-
 					wLewo();
-
 					break;
 				case sf::Keyboard::Right:
 					wPrawo();

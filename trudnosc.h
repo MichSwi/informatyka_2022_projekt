@@ -8,7 +8,7 @@ class TRUDNOSC
 {
 public:
 
-	TRUDNOSC(float szer, float wys);
+	TRUDNOSC();
 
 	int petlaglowna(sf::RenderWindow& window);
 
@@ -17,7 +17,7 @@ public:
 	void wLewo();
 	void draw(sf::RenderWindow& window);
 	int licznik = 0;//mowi w jakim wierszu aktualnie jestesmy
-	int sojusznik = 0;
+	bool sojusznik;
 	int wybranysamolot = 1;
 	int pow = 0;//   1-powrot   2-zatwierdz
 	int daj_wybranysamolot() {
@@ -25,7 +25,10 @@ public:
 	}
 
 	sf::Texture samolot_textura[3];
+	sf::Texture sojusznik_textura;
 	sf::Sprite samolot_sprite[3];
+	sf::Sprite sojusznik_sprite;
+	sf::Text sojusznik_staty;
 
 	int rysuj_staty = -1;// -1 czyli ¿adne
 
@@ -36,6 +39,7 @@ public:
 
 	float deltatime = 0.0f;
 	sf::Clock zegar;
+	bool rysuj_sojusznika;
 
 
 private:
