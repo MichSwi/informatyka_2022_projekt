@@ -40,9 +40,9 @@ MENU::~MENU() {
 }
 
 
-void MENU::draw(sf::RenderWindow &window) {
+void MENU::draw() {
 	for (int i = 0; i < 4; i++) {
-		window.draw(pozycjeMenu[i]);
+		//window.draw(pozycjeMenu[i]);
 	}
 }
 
@@ -53,7 +53,6 @@ void MENU::wGore() {
 		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
 	}
 	else {
-
 		pozycjeMenu[menuWybrane].setFillColor(sf::Color::White);
 		menuWybrane--;
 		if (menuWybrane == -1) {
@@ -76,5 +75,76 @@ void MENU::wDol() {
 			menuWybrane = 0;
 		}
 		pozycjeMenu[menuWybrane].setFillColor(sf::Color::Red);
+	}
+}
+
+int MENU::petlaglowna(sf::RenderWindow& window) {
+menu:
+	sf::Event evn;
+	while (window.isOpen()) {
+		window.clear(sf::Color::Black);
+		for (int i = 0; i < 4; i++) {
+			window.draw(pozycjeMenu[i]);
+			//std::cout << i;
+		}
+		//std::cout << "a";
+
+		while (window.pollEvent(evn))
+		{
+			switch (evn.type) {
+			case sf::Event::Closed:
+				window.close();
+				break;
+			case sf::Event::KeyPressed:
+				if (evn.key.code == sf::Keyboard::Escape) {
+					std::cout << "WYJDZ - ESC\n\n";
+					window.close();
+				}
+				break;
+			case sf::Event::KeyReleased:
+				switch (evn.key.code) {
+
+				case sf::Keyboard::Up:
+					wGore();
+					std::cout << "w gore";
+					break;
+
+				case sf::Keyboard::Down:
+					wDol();
+					break;
+				case sf::Keyboard::Return:
+					TRUDNOSC poziom(window.getSize().x, window.getSize().y);
+
+
+
+					switch (menuNacisniete()) {
+					case 0:
+						if (poziom.petlaglowna(window)) {
+							goto menu;
+						}
+
+
+
+						return 0;
+						break;
+					case 1:
+						//opcje
+
+						return 3;
+						break;
+					case 2:
+						//pomoc
+						return 4;
+						break;
+					case 3:
+						//window
+						window.close();
+						break;
+					}
+
+				}
+			}
+		}
+		window.display();
 	}
 }

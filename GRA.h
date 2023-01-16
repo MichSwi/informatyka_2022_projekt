@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include "TRUDNOSC.h"
 
 #define ilosc_pociskow_gracza 20
 #define ilosc_wrogow 6
@@ -14,7 +15,7 @@
 class GRA
 {
 public:
-	GRA(float wys, float szer);
+	GRA(float wys, float szer, bool czy_sojusznik, bool ktory_samolot);
 
 	sf::Sprite gracz,
 		bot,
@@ -33,7 +34,17 @@ public:
 		textura_rakiety;
 
 	float v; // PREDKOSC gracza
-	void draw(sf::RenderWindow &window);
+	void draw(sf::RenderWindow& window);
+
+	//nowe
+	void petlaglowna(sf::RenderWindow& window);
+	bool sojusznik;
+	int wybranysamolot;
+	float deltatime = 0.0f;
+	sf::Clock zegar;
+	int rekord, nowe_punkty;
+	//koniec nowe
+
 
 	int sprawdz_kolizje();
 	void ruchgracza(int i); //RUCH GRACZA
@@ -47,12 +58,13 @@ public:
 	int licznik_pociskow_gracza = 0;
 	int licznik_rakiet = 0;
 	int punkty = 0;
-	float calyczas[ilosc_wrogow] = {0,0,0,0,0,0};
+	float calyczas[ilosc_wrogow] = { 0,0,0,0,0,0 };
 	float calyczas_sojusznika = 0.0f;
 	float przeladowanie_sojusznika = 0.5f;
 	int licznik_pociskow = 0;
 	int licznik_sojuszniczych = 0;
 	int hp_gracza = -10;//NIE ZALADOWANO HP Z WYBORU SAMOLOTU
+	const int max_hp_wroga[ilosc_wrogow] = { 5,2,2,12,7,7 };
 	int hp_wroga[ilosc_wrogow] = { 5,2,2,12,7,7 };
 	float v_wroga[ilosc_wrogow] = { 5,4,4,1.6,5,5 };
 	float przeladowanie[ilosc_wrogow] = { 2,2,2,2,2,2 }; // w sekundach
@@ -68,4 +80,3 @@ private:
 	sf::Text gameover_text;
 	std::string punkty_string;
 };
-

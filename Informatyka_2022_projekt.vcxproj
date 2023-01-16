@@ -147,14 +147,14 @@
     <ClCompile Include="GRA.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MENU.cpp" />
-    <ClCompile Include="trudnosc.cpp" />
+    <ClCompile Include="TRUDNOSC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ANIMACJA.h" />
     <ClInclude Include="GAME_OVER.h" />
     <ClInclude Include="GRA.h" />
     <ClInclude Include="MENU.h" />
-    <ClInclude Include="trudnosc.h" />
+    <ClInclude Include="TRUDNOSC.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

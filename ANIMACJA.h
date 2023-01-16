@@ -6,7 +6,7 @@ class ANIMACJA
 {
 public:
 
-	ANIMACJA(sf::Texture *teksturaanimacji, sf::Vector2u licznikobrazu, float czaszmiany);
+	ANIMACJA(sf::Texture* teksturaanimacji, sf::Vector2u licznikobrazu, float czaszmiany);
 
 	sf::IntRect poleobrazu;
 
@@ -19,4 +19,3 @@ private:
 	float calyczas;
 	float czaszmiany;
 };
-

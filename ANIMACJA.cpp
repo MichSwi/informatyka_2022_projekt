@@ -1,7 +1,7 @@
 #include "ANIMACJA.h"
 #include <iostream>
 
-ANIMACJA::ANIMACJA(sf::Texture *teksturaanimacji, sf::Vector2u licznikobrazu, float czaszmiany) {
+ANIMACJA::ANIMACJA(sf::Texture* teksturaanimacji, sf::Vector2u licznikobrazu, float czaszmiany) {
 	this->licznikobrazu = licznikobrazu;
 	this->czaszmiany = czaszmiany;
 	calyczas = 0.0f;

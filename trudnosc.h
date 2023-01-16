@@ -1,20 +1,23 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "ANIMACJA.h"
 #include <iostream>
 
-class trudnosc
+class TRUDNOSC
 {
 public:
 
-	trudnosc(float szer, float wys);
+	TRUDNOSC(float szer, float wys);
+
+	int petlaglowna(sf::RenderWindow& window);
 
 	void Enter();
 	void wPrawo();
 	void wLewo();
 	void draw(sf::RenderWindow& window);
 	int licznik = 0;//mowi w jakim wierszu aktualnie jestesmy
-	bool sojusznik = 0;
+	int sojusznik = 0;
 	int wybranysamolot = 1;
 	int pow = 0;//   1-powrot   2-zatwierdz
 	int daj_wybranysamolot() {
@@ -30,6 +33,11 @@ public:
 		return pow;
 	}
 
+
+	float deltatime = 0.0f;
+	sf::Clock zegar;
+
+
 private:
 	sf::Font czcionka;
 	sf::Text text1;//"czy potzrebujesz sojusznika?"
@@ -39,6 +47,5 @@ private:
 	sf::Text zatw;
 	sf::Text powr;
 	sf::Text statystyki[3];
-	
-};
 
+};

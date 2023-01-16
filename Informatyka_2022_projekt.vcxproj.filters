@@ -21,7 +21,7 @@
     <ClCompile Include="MENU.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="trudnosc.cpp">
+    <ClCompile Include="TRUDNOSC.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="GRA.cpp">
@@ -38,7 +38,7 @@
     <ClInclude Include="MENU.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="trudnosc.h">
+    <ClInclude Include="TRUDNOSC.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="GRA.h">
