@@ -10,6 +10,7 @@
 #define ilosc_szybkich_pociskow 85
 #define ilosc_rakiet 5
 #define ilosc_sojuszniczych_pociskow 10
+#define ilosc_explozji 4
 
 
 class GRA
@@ -63,17 +64,16 @@ public:
 	int licznik_sojuszniczych = 0;
 	int hp_gracza = -10;//NIE ZALADOWANO HP Z WYBORU SAMOLOTU
 	int dmg_gracza;
-
+	int ktory;
+	void dead(int ktory);
 	//   0-czerw    1,2-heli   3-bomber   4-zielony   5-niebieski
 
 	const int max_hp_wroga[ilosc_wrogow] = { 4,2,2,12,7,7 };
-	int hp_wroga[ilosc_wrogow] = { 4,2,2,12,7,7 };
+	int hp_wroga[ilosc_wrogow] = { 4,2,2,12,7,6 };
 	float v_wroga[ilosc_wrogow] = { 3.5,5,5,2.2,4,4 };
-	float przeladowanie[ilosc_wrogow] = { 2,0.8,0.8,2.5,2,2 }; // w sekundach
+	float przeladowanie[ilosc_wrogow] = { 2,0.8,0.8,2.5,2.3,2 }; // w sekundach
 	void aktualizajca_punktow();
-	void draw_pomoc(sf::RenderWindow &window);
-	void petla_glowna(float deltatime);
-	bool help;
+
 private:
 	sf::Vector2f pozycjabota;
 	sf::Vector2f pozycjagracza;
@@ -82,6 +82,19 @@ private:
 	sf::Text punktacja;
 	sf::Text gameover_text;
 	std::string punkty_string;
+	sf::Texture textura_chmury;
+	sf::Sprite chmura1;
+	sf::Sprite chmura2;
 
 	sf::Texture textura_pomocy;
+	sf::Texture textura_pauzy;
+	sf::Sprite pauza;
+	sf::Sprite sun;
+	sf::Texture textura_sun;
+	sf::Text text;
+	sf::Text zycie;
+
+	int licznik_expl;
+	sf::Texture textura_expl[4];
+	sf::Sprite expl[ilosc_explozji];
 };

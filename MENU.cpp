@@ -16,7 +16,8 @@ MENU::MENU() {
 	obecny_rekord.setCharacterSize(70);
 	obecny_rekord.setPosition(1500, 930);
 
-	
+	textura_pomoc_menu.loadFromFile("pomoc_menu.png");
+	pomoc_menu.setTexture(textura_pomoc_menu);
 
 
 
@@ -117,17 +118,11 @@ menu:
 		while (window.pollEvent(evn))
 		{
 			switch (evn.type) {
-			case sf::Event::Closed:
-				window.close();
-				break;
-			case sf::Event::KeyPressed:
-				if (evn.key.code == sf::Keyboard::Escape) {
-					std::cout << "WYJDZ - ESC\n\n";
-					window.close();
-				}
-				break;
 			case sf::Event::KeyReleased:
 				switch (evn.key.code) {
+				case sf::Keyboard::Escape:
+					window.close();
+					return 1;
 				case sf::Keyboard::Up:
 					wGore();
 					break;
@@ -145,11 +140,17 @@ menu:
 						break;
 					case 1:
 						//pomoc
-						return 3;
+							window.draw(pomoc_menu);
+							window.display();
+							while (1) {
+								if (window.waitEvent(evn) && evn.type == sf::Event::KeyReleased) {
+									break;
+								}
+							}
 						break;
 					case 2:
 						//wyjdz
-						window.close();
+						return 1;
 						break;
 					}
 				}

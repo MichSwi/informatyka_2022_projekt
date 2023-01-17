@@ -23,4 +23,6 @@ private:
 	sf::Font czcionka;
 	sf::Text pozycjeMenu[3];
 	sf::Text obecny_rekord;
+	sf::Sprite pomoc_menu;
+	sf::Texture textura_pomoc_menu;
 };

@@ -10,12 +10,12 @@ public:
 
 	sf::IntRect poleobrazu;
 
-	void update(int row, float deltatime);
+	void update(int row, float deltatime,bool tryb);
+	void reset();
 
 private:
 	sf::Vector2u licznikobrazu; //ktory wycinek obrazu
 	sf::Vector2u wybranyobraz;
-
 	float calyczas;
 	float czaszmiany;
 };

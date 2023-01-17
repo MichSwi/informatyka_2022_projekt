@@ -44,8 +44,6 @@ int GAME_OVER::petlaglowna(sf::RenderWindow& window) {
 					return 1;
 				//powrot do glownego menu
 				break;
-			case sf::Event::Closed:
-				window.close();
 			}
 		}
 	}

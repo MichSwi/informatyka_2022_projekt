@@ -262,9 +262,9 @@ int TRUDNOSC::petlaglowna(sf::RenderWindow& window) {
 		window.clear();
 		draw(window);
 
-		czarny_menu.update(0, deltatime);
-		szary_menu.update(0, deltatime);
-		papierowy_menu.update(0, deltatime);
+		czarny_menu.update(0, deltatime,0);
+		szary_menu.update(0, deltatime,0);
+		papierowy_menu.update(0, deltatime,0);
 		samolot_sprite[0].setTextureRect(szary_menu.poleobrazu);
 		samolot_sprite[1].setTextureRect(czarny_menu.poleobrazu);
 		samolot_sprite[2].setTextureRect(papierowy_menu.poleobrazu);
@@ -275,13 +275,6 @@ int TRUDNOSC::petlaglowna(sf::RenderWindow& window) {
 		while (window.pollEvent(evn)) {
 
 			switch (evn.type) {
-			case sf::Event::Closed:
-				window.close();
-				break;
-			case sf::Event::KeyPressed:
-				if (evn.key.code == sf::Keyboard::Escape)
-					window.close();
-				break;
 			case sf::Event::KeyReleased:
 				switch (evn.key.code) {
 				case sf::Keyboard::Return:

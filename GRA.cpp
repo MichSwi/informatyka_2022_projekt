@@ -10,10 +10,8 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	//przeniesienie poziomu trudnosci do gry
 	wybranysamolot = ktory_samolot;
 	sojusznik = czy_sojusznik;
-	std::cout << "|w konstruktorze gra: " << wybranysamolot;
 
-
-	help = 0;
+	licznik_expl = -1;
 	//POCISKI GRACZA i sojusznika
 	textura_pocisku.loadFromFile("bullet.png");
 	for (int i = 0; i < ilosc_pociskow_gracza; i++) {
@@ -62,6 +60,12 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	wrog[5].setTexture(textura_wroga[5]);
 	wrog[5].setPosition(300-3000, 150);
 
+	//WYBUCHY
+	for (int i=0; i < ilosc_explozji; i++) {
+		textura_expl[i].loadFromFile("expl.png");
+		expl[i].setTexture(textura_expl[i]);
+		expl[i].setPosition(-200, -200);
+	}
 
 	//RAKIETY
 	textura_rakiety.loadFromFile("missle.png");
@@ -75,7 +79,7 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	punktacja.setCharacterSize(60);
 	punktacja.setOutlineColor(sf::Color::Black);
 	punktacja.setOutlineThickness(5);
-	punktacja.setFillColor(sf::Color::Red);
+	punktacja.setFillColor(sf::Color::White);
 	punktacja.setString("0");
 	punktacja.setPosition(1800, 10);
 
@@ -92,16 +96,50 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 
 	textura_pomocy.loadFromFile("pomoc.png");
 	pomoc.setTexture(textura_pomocy);
-	pomoc.setPosition(400, 200);
+	pomoc.setPosition(480, 270);
 
+	textura_chmury.loadFromFile("cloud.png");
+	chmura1.setTexture(textura_chmury);
+	chmura1.scale(3, 2);
+	chmura1.setPosition(600, 50);
+	chmura2.setTexture(textura_chmury);
+	chmura2.setPosition(600, 200);
+	chmura2.rotate(180);
+
+	textura_sun.loadFromFile("sun.png");
+	sun.setTexture(textura_sun);
+	sun.setPosition(1080, 0);
+
+	textura_pauzy.loadFromFile("pauza.png");
+	pauza.setTexture(textura_pauzy);
+	pauza.setPosition(660,371);
+
+	text.setFont(czcionka);
+	text.setFillColor(sf::Color::White);
+	text.setPosition(1650,1010);
+	text.setString("F1 - pomoc, Esc - pauza");
+	text.setCharacterSize(45);
+	text.setOutlineColor(sf::Color::Black);
+	text.setOutlineThickness(2);
+
+	zycie.setFont(czcionka);
+	zycie.setCharacterSize(65);
+	zycie.setOutlineColor(sf::Color::Black);
+	zycie.setOutlineThickness(2);
+	zycie.setPosition(40, 960);
 
 
 	zaladujustawienia(wybranysamolot);
 }
 
 void GRA::draw(sf::RenderWindow& window) {
+	window.draw(text);
 	window.draw(gracz);
+	window.draw(sun);
+	window.draw(zycie);
+
 	window.draw(punktacja);
+	
 	for (int i = 0; i < ilosc_pociskow_gracza; i++)
 		window.draw(pocisk[i]);
 
@@ -120,11 +158,19 @@ void GRA::draw(sf::RenderWindow& window) {
 	for (int i = 0; i < ilosc_rakiet; i++) {
 		window.draw(rakieta[i]);
 	}
+	window.draw(chmura1);
+	window.draw(chmura2);
+
+	for (int i = 0; i < ilosc_explozji; i++) {
+		window.draw(expl[i]);
+	}
 }
 
 void GRA::aktualizajca_punktow() {
 	punkty_string = std::to_string(punkty);
 	punktacja.setString(punkty_string);
+
+	zycie.setString("Twoja wytrzymalosc: "+std::to_string(hp_gracza));
 }
 
 void GRA::ruchpociskow(float deltatime) {
@@ -224,10 +270,12 @@ void GRA::zaladujustawienia(int wybranysamolot) {
 }
 
 void GRA::ruchgracza(int i) {
-	if (i == 0) {
+
+
+	if (i == 0 && gracz.getPosition().x>10) {
 		gracz.move(-v, 0);
 	}
-	if (i == 1) {
+	if (i == 1&&gracz.getPosition().x<1800) {
 		gracz.move(v, 0);
 	}
 }
@@ -244,7 +292,7 @@ void GRA::respawn() {
 }
 
 
-int GRA::sprawdz_kolizje() {
+int GRA::sprawdz_kolizje() {//zwraca numer przeciwnika ktory zginal
 	//KOLIZJE POCISKOW SOJUSZNIKA Z PRZECIWNIKAMI
 	for (int i = 0; i < ilosc_sojuszniczych_pociskow; i++) {
 		sf::IntRect bullet_sojusz(sojuszniczy_pocisk[i].getPosition().x, sojuszniczy_pocisk[i].getPosition().y, sojuszniczy_pocisk[i].getTextureRect().width, sojuszniczy_pocisk[i].getTextureRect().height);
@@ -254,10 +302,11 @@ int GRA::sprawdz_kolizje() {
 				hp_wroga[j]--;
 				if (hp_wroga[j] <= 0) {
 					hp_wroga[j] = max_hp_wroga[j];
-					wrog[j].setPosition(-3000, wrog[j].getPosition().y);
+					return j;
 				}
 				sojuszniczy_pocisk[i].setPosition(-3000, -3000);
 				std::cout << "\nsojusznik trafil wroga " << j << ",zostalo mu hp:" << hp_wroga[j];
+				
 			}
 		}
 	}
@@ -295,16 +344,15 @@ int GRA::sprawdz_kolizje() {
 				std::cout << "\nwrogowi" << j << " zostalo: " << hp_wroga[j];
 				if (hp_wroga[j] <= 0) {
 					hp_wroga[j] = max_hp_wroga[j];
-					wrog[j].setPosition(-2500, wrog[j].getPosition().y);
 					punkty++;
+					return j;
 				}
 				pocisk[i].setPosition(-3000, -3000);
 				std::cout << "\nKOLIZJA, wrog:" << j << " pocisk" << i << std::endl;
-				return 1;
 			}
 		}
 	}
-	return 0;
+	return -1;
 }
 
 void GRA::ruchbota() {
@@ -354,13 +402,7 @@ void GRA::strzal() {
 	licznik_pociskow_gracza++;
 }
 
-void GRA::petla_glowna(float deltatime) {
-	respawn();
-	ruchbota();
-	sprawdz_kolizje();
-	ruchpociskow(deltatime);
-	aktualizajca_punktow();
-}
+
 
 int GRA::petlaglowna(sf::RenderWindow& window) {
 	std::ifstream odczyt;
@@ -371,8 +413,10 @@ int GRA::petlaglowna(sf::RenderWindow& window) {
 	ANIMACJA heli_wrog1(&textura_wroga[1], sf::Vector2u(2, 1), 0.3f);
 	ANIMACJA heli_wrog2(&textura_wroga[2], sf::Vector2u(2, 1), 0.3f);
 	ANIMACJA animacja(&textura_gracza[wybranysamolot], sf::Vector2u(2, 1), 0.3f);//animacja gracza
-
-
+	ANIMACJA explozja0(&textura_expl[0], sf::Vector2u(6, 6), 0.1f);
+	ANIMACJA explozja1(&textura_expl[1], sf::Vector2u(6, 6), 0.1f);
+	ANIMACJA explozja2(&textura_expl[2], sf::Vector2u(6, 6), 0.1f);
+	ANIMACJA explozja3(&textura_expl[3], sf::Vector2u(6, 6), 0.1f);
 
 	while (window.isOpen()) {
 
@@ -389,18 +433,64 @@ int GRA::petlaglowna(sf::RenderWindow& window) {
 			if (game_over.petlaglowna(window))
 				return 1;
 		}
-		animacja.update(0, deltatime);
+		animacja.update(0, deltatime,0);
 
 		wrog[0].setTextureRect(czerwony_wrog.poleobrazu);
-		czerwony_wrog.update(0, deltatime);
-		heli_wrog1.update(0, deltatime);
-		heli_wrog2.update(0, deltatime);
+		czerwony_wrog.update(0, deltatime,0);
+		heli_wrog1.update(0, deltatime,0);
+		heli_wrog2.update(0, deltatime,0);
+
+		///
+		expl[0].setTextureRect(explozja0.poleobrazu);
+		expl[1].setTextureRect(explozja1.poleobrazu);
+		expl[2].setTextureRect(explozja2.poleobrazu);
+		expl[3].setTextureRect(explozja3.poleobrazu);
+		///
 
 		gracz.setTextureRect(animacja.poleobrazu);
 		wrog[1].setTextureRect(heli_wrog1.poleobrazu);
 		wrog[2].setTextureRect(heli_wrog2.poleobrazu);
 
-		petla_glowna(deltatime);
+		//petla_glowna(deltatime);
+		respawn();
+		ruchbota();
+		ruchpociskow(deltatime);
+		aktualizajca_punktow();
+		ktory = sprawdz_kolizje();
+		if (ktory != -1) {
+			licznik_expl++;
+			switch (licznik_expl) {
+			case 0:
+				expl[0].setPosition(wrog[ktory].getPosition());
+				wrog[ktory].setPosition(-2500, wrog[ktory].getPosition().y);
+				explozja0.reset();
+				break;
+			case 1: 
+				expl[1].setPosition(wrog[ktory].getPosition());
+				wrog[ktory].setPosition(2500, wrog[ktory].getPosition().y);
+				explozja1.reset();
+				break;
+			case 2:
+				expl[2].setPosition(wrog[ktory].getPosition());
+				wrog[ktory].setPosition(-2500, wrog[ktory].getPosition().y);
+				explozja2.reset();
+				break;
+			case 3:
+				expl[3].setPosition(wrog[ktory].getPosition());
+				wrog[ktory].setPosition(2500, wrog[ktory].getPosition().y);
+				explozja3.reset();
+				break;
+			case ilosc_explozji:
+				licznik_expl = -1;
+				break;
+			}
+		}
+
+		explozja0.update(0, deltatime, 1);
+		explozja1.update(0, deltatime, 1);
+		explozja2.update(0, deltatime, 1);
+		explozja3.update(0, deltatime, 1);
+
 		draw(window);
 
 		window.display();
@@ -408,20 +498,31 @@ int GRA::petlaglowna(sf::RenderWindow& window) {
 		sf::Event evn;
 
 		while (window.pollEvent(evn)) {
-			if (evn.type == sf::Event::Closed || evn.key.code == sf::Keyboard::Escape) {
-				window.close();
-				nowe_punkty = punkty;
-				if (rekord < nowe_punkty) {
-					std::ofstream zapis;
-					zapis.open("dane.txt");
-					zapis << nowe_punkty;
-					zapis.close();
+			
+			if (evn.type==sf::Event::KeyReleased && evn.key.code == sf::Keyboard::Escape) {
+				window.draw(pauza);
+				window.display();
+				while (1) {
+					if (evn.type == sf::Event::KeyPressed && evn.key.code == sf::Keyboard::Escape) {
+						nowe_punkty = punkty;
+						if (rekord < nowe_punkty) {
+							std::ofstream zapis;
+							zapis.open("dane.txt");
+							zapis << nowe_punkty;
+							zapis.close();
+						}
+						window.close();
+						return 1;
+					}
+					if (window.waitEvent(evn) && evn.type == sf::Event::KeyReleased && evn.key.code==sf::Keyboard::Return) {
+						break;
+					}
 				}
 			}
 			if (evn.type == sf::Event::KeyReleased && evn.key.code == sf::Keyboard::Space) {
 				strzal();
 			}
-			if (evn.type == sf::Event::KeyReleased && evn.key.code == sf::Keyboard::Q) {				
+			if (evn.type == sf::Event::KeyReleased && evn.key.code == sf::Keyboard::F1) {				
 				window.draw(pomoc);
 				window.display();
 				while (1) {
@@ -430,15 +531,11 @@ int GRA::petlaglowna(sf::RenderWindow& window) {
 					}
 				}
 			}
+
 		}
 
 		switch (evn.type) {
-		case sf::Event::Closed:
-			window.close();
-			break;
 		case sf::Event::KeyPressed:
-			if (evn.key.code == sf::Keyboard::Escape)
-				window.close();
 			if (evn.key.code == sf::Keyboard::Left) {
 				ruchgracza(0);
 			}
