@@ -8,17 +8,17 @@ class MENU
 {
 public:
 	MENU();
+	int petlaglowna(sf::RenderWindow& window);
 
+private:
 	void draw(sf::RenderWindow& window);
 	void wGore();
 	void wDol();
-	int petlaglowna(sf::RenderWindow& window);
 
 	int menuNacisniete() {
 		return menuWybrane;
 	}
 
-private:
 	int menuWybrane;
 	sf::Font czcionka;
 	sf::Text pozycjeMenu[3];

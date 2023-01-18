@@ -11,7 +11,7 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	wybranysamolot = ktory_samolot;
 	sojusznik = czy_sojusznik;
 
-	licznik_expl = -1;
+
 	//POCISKI GRACZA i sojusznika
 	textura_pocisku.loadFromFile("bullet.png");
 	for (int i = 0; i < ilosc_pociskow_gracza; i++) {
@@ -25,9 +25,13 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	}
 
 	textura_szybkiego_pocisku.loadFromFile("bullet-wdol.png");
+	for (int i = 0; i < ilosc_szybkich_pociskow; i++) {
+		wrogi_szybki_pocisk[i].setTexture(textura_szybkiego_pocisku);
+		wrogi_szybki_pocisk[i].setTextureRect(sf::IntRect(0, 0, 9, 41));
+		wrogi_szybki_pocisk[i].setPosition(400, 2200);
+	}
 
 	gracz.setPosition(980, 900);
-
 	textura_gracza[0].loadFromFile("gracz_szary_idle.png");
 	textura_gracza[1].loadFromFile("gracz_nie_pixel.png");
 	textura_gracza[2].loadFromFile("gracz_paap.png");
@@ -61,6 +65,7 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	wrog[5].setPosition(300-3000, 150);
 
 	//WYBUCHY
+	licznik_expl = -1;
 	for (int i=0; i < ilosc_explozji; i++) {
 		textura_expl[i].loadFromFile("expl.png");
 		expl[i].setTexture(textura_expl[i]);
@@ -82,17 +87,6 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	punktacja.setFillColor(sf::Color::White);
 	punktacja.setString("0");
 	punktacja.setPosition(1800, 10);
-
-
-	for (int i = 0; i < ilosc_szybkich_pociskow; i++) {
-		wrogi_szybki_pocisk[i].setTexture(textura_szybkiego_pocisku);
-		wrogi_szybki_pocisk[i].setTextureRect(sf::IntRect(0, 0, 9, 41));
-		wrogi_szybki_pocisk[i].setPosition(400, 2200);
-	}
-
-	for (int i = 0; i < 5; i++) {
-		rakieta[i].setTexture(textura_rakiety);
-	}
 
 	textura_pomocy.loadFromFile("pomoc.png");
 	pomoc.setTexture(textura_pomocy);
@@ -128,7 +122,6 @@ GRA::GRA(bool czy_sojusznik, int ktory_samolot) {
 	zycie.setOutlineThickness(2);
 	zycie.setPosition(40, 960);
 
-
 	zaladujustawienia(wybranysamolot);
 }
 
@@ -137,7 +130,6 @@ void GRA::draw(sf::RenderWindow& window) {
 	window.draw(gracz);
 	window.draw(sun);
 	window.draw(zycie);
-
 	window.draw(punktacja);
 	
 	for (int i = 0; i < ilosc_pociskow_gracza; i++)
@@ -169,7 +161,6 @@ void GRA::draw(sf::RenderWindow& window) {
 void GRA::aktualizajca_punktow() {
 	punkty_string = std::to_string(punkty);
 	punktacja.setString(punkty_string);
-
 	zycie.setString("Twoja wytrzymalosc: "+std::to_string(hp_gracza));
 }
 
@@ -257,7 +248,7 @@ void GRA::zaladujustawienia(int wybranysamolot) {
 	case 1:
 		v = 7.0f;
 		hp_gracza = 8;
-		dmg_gracza - 2;
+		dmg_gracza = 2;
 		gracz.setTexture(textura_gracza[wybranysamolot]);
 		break;
 	case 2:
@@ -270,7 +261,6 @@ void GRA::zaladujustawienia(int wybranysamolot) {
 }
 
 void GRA::ruchgracza(int i) {
-
 
 	if (i == 0 && gracz.getPosition().x>10) {
 		gracz.move(-v, 0);
@@ -403,7 +393,6 @@ void GRA::strzal() {
 }
 
 
-
 int GRA::petlaglowna(sf::RenderWindow& window) {
 	std::ifstream odczyt;
 	odczyt.open("dane.txt");
@@ -419,39 +408,35 @@ int GRA::petlaglowna(sf::RenderWindow& window) {
 	ANIMACJA explozja3(&textura_expl[3], sf::Vector2u(6, 6), 0.1f);
 
 	while (window.isOpen()) {
-
 		deltatime = zegar.restart().asSeconds();
-
 		window.clear(sf::Color::Blue);
 
 		if (hp_gracza == 0) {//PRZEGRANA
 			hp_gracza = -10;
 			window.clear(sf::Color::White);
 			nowe_punkty = punkty;
-			std::cout << "nowe punkty to:" << nowe_punkty;
 			GAME_OVER game_over(nowe_punkty, rekord);
 			if (game_over.petlaglowna(window))
 				return 1;
 		}
-		animacja.update(0, deltatime,0);
 
-		wrog[0].setTextureRect(czerwony_wrog.poleobrazu);
+		animacja.update(0, deltatime,0);//.update -> zmiany pozycji textur spriteow
 		czerwony_wrog.update(0, deltatime,0);
 		heli_wrog1.update(0, deltatime,0);
 		heli_wrog2.update(0, deltatime,0);
 
 		///
-		expl[0].setTextureRect(explozja0.poleobrazu);
+		expl[0].setTextureRect(explozja0.poleobrazu);//przypisanie aktua;nej pozycji textury dla spritea
 		expl[1].setTextureRect(explozja1.poleobrazu);
 		expl[2].setTextureRect(explozja2.poleobrazu);
 		expl[3].setTextureRect(explozja3.poleobrazu);
-		///
 
 		gracz.setTextureRect(animacja.poleobrazu);
 		wrog[1].setTextureRect(heli_wrog1.poleobrazu);
 		wrog[2].setTextureRect(heli_wrog2.poleobrazu);
+		wrog[0].setTextureRect(czerwony_wrog.poleobrazu);
+		///
 
-		//petla_glowna(deltatime);
 		respawn();
 		ruchbota();
 		ruchpociskow(deltatime);
@@ -492,13 +477,10 @@ int GRA::petlaglowna(sf::RenderWindow& window) {
 		explozja3.update(0, deltatime, 1);
 
 		draw(window);
-
 		window.display();
-
 		sf::Event evn;
 
 		while (window.pollEvent(evn)) {
-			
 			if (evn.type==sf::Event::KeyReleased && evn.key.code == sf::Keyboard::Escape) {
 				window.draw(pauza);
 				window.display();

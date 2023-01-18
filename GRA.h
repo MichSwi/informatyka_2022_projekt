@@ -17,84 +17,100 @@ class GRA
 {
 public:
 	GRA(bool czy_sojusznik, int ktory_samolot);
+	int petlaglowna(sf::RenderWindow& window);
 
-	sf::Sprite gracz,
-		bot,
-		wrog[ilosc_wrogow],//   0-czerw    1,2-heli   3-bomber   4-zielony   5-niebieski
+private:
+	//gracz
+	sf::Sprite gracz;
+	sf::Texture textura_gracza[3];
+	float v; // PREDKOSC gracza
+	void ruchgracza(int i); //RUCH GRACZA
+	void strzal();
+	int wybranysamolot,
+		dmg_gracza,
+		hp_gracza = -10;//NIE ZALADOWANO HP Z WYBORU SAMOLOTU
+
+	//sojusznik
+	sf::Sprite bot;
+	sf::Texture textura_bota;
+	bool sojusznik,
+		 lewo_bota = 0;
+	float calyczas_sojusznika = 0.0f,
+		  przeladowanie_sojusznika = 0.5f;
+	void ruchbota(); //RUCH BOTA
+
+
+	//pociski
+	sf::Sprite  
 		pocisk[ilosc_pociskow_gracza],
 		sojuszniczy_pocisk[ilosc_sojuszniczych_pociskow],
 		wrogi_szybki_pocisk[ilosc_szybkich_pociskow],
-		rakieta[ilosc_rakiet],
-		pomoc;
-
-	sf::Texture textura_gracza[3],
-		textura_wroga[ilosc_wrogow],
-		textura_bota,
+		rakieta[ilosc_rakiet];
+	sf::Texture 
 		textura_pocisku,
 		textura_szybkiego_pocisku,
 		textura_pocisku_w_gore,
 		textura_rakiety;
+	int 
+		licznik_pociskow_gracza = 0,
+		licznik_rakiet = 0,
+		licznik_sojuszniczych = 0,
+		licznik_pociskow = 0;
 
-	float v; // PREDKOSC gracza
-	void draw(sf::RenderWindow& window);
-
-	int petlaglowna(sf::RenderWindow& window);
-	bool sojusznik;
-	int wybranysamolot;
-	float deltatime = 0.0f;
-	sf::Clock zegar;
-	int rekord, nowe_punkty;
-
-	int sprawdz_kolizje();
-	void ruchgracza(int i); //RUCH GRACZA
-	void ruchbota(); //RUCH BOTA
-	void ruchpociskow(float deltatime);
-	void strzal();
-	void respawn();
-	bool lewo[ilosc_wrogow] = { 0,1,0,1,0,1 }; //zmienna odpowidadjaca za zmiane predkosci po odbiciu od sciany
-	bool lewo_bota = 0;
-	void zaladujustawienia(int wybranysamolot);
-	int licznik_pociskow_gracza = 0;
-	int licznik_rakiet = 0;
-	int punkty = 0;
-	float calyczas[ilosc_wrogow] = { 0,0,0,0,0,0 };
-	float calyczas_sojusznika = 0.0f;
-	float przeladowanie_sojusznika = 0.5f;
-	int licznik_pociskow = 0;
-	int licznik_sojuszniczych = 0;
-	int hp_gracza = -10;//NIE ZALADOWANO HP Z WYBORU SAMOLOTU
-	int dmg_gracza;
-	int ktory;
-	void dead(int ktory);
-	//   0-czerw    1,2-heli   3-bomber   4-zielony   5-niebieski
-
+	//wrodzy
+		//   0-czerw    1,2-heli   3-bomber   4-zielony   5-niebieski
+	sf::Sprite wrog[ilosc_wrogow];
+	sf::Texture textura_wroga[ilosc_wrogow];
 	const int max_hp_wroga[ilosc_wrogow] = { 4,2,2,12,7,7 };
 	int hp_wroga[ilosc_wrogow] = { 4,2,2,12,7,6 };
-	float v_wroga[ilosc_wrogow] = { 3.5,5,5,2.2,4,4 };
-	float przeladowanie[ilosc_wrogow] = { 2,0.8,0.8,2.5,2.3,2 }; // w sekundach
-	void aktualizajca_punktow();
+	const float v_wroga[ilosc_wrogow] = { 3.5,5,5,2.2,4,4 },
+				przeladowanie[ilosc_wrogow] = { 2,0.8,0.8,2.5,2.3,2 }; // w sekundach
+	float calyczas[ilosc_wrogow] = { 0,0,0,0,0,0 };
+	bool lewo[ilosc_wrogow] = { 0,1,0,1,0,1 }; //zmienna odpowidadjaca za zmiane predkosci po odbiciu od sciany
+		//   0-czerw    1,2-heli   3-bomber   4-zielony   5-niebieski
 
-private:
-	sf::Vector2f pozycjabota;
-	sf::Vector2f pozycjagracza;
-	sf::Vector2f pozycjawroga[ilosc_pociskow_gracza];
+	//FIZYKA
+	int sprawdz_kolizje();
+	void ruchpociskow(float deltatime);
+	void respawn();
+
+	//otoczenie
+	sf::Texture textura_chmury,
+				textura_sun;
+
+	sf::Sprite chmura1,
+			   chmura2,
+			   sun;
+	
+	//tekst
+	sf::Vector2f pozycjabota,
+				 pozycjagracza,
+				 pozycjawroga[ilosc_pociskow_gracza];
 	sf::Font czcionka;
-	sf::Text punktacja;
-	sf::Text gameover_text;
+	sf::Text text,//f1 lub esc
+			 zycie,
+			 punktacja;
 	std::string punkty_string;
-	sf::Texture textura_chmury;
-	sf::Sprite chmura1;
-	sf::Sprite chmura2;
+	void aktualizajca_punktow();
+	int rekord,
+		nowe_punkty,
+		punkty=0;
 
-	sf::Texture textura_pomocy;
-	sf::Texture textura_pauzy;
-	sf::Sprite pauza;
-	sf::Sprite sun;
-	sf::Texture textura_sun;
-	sf::Text text;
-	sf::Text zycie;
+	//pauza i pomoc
+	sf::Texture textura_pauzy,
+				textura_pomocy;
+	sf::Sprite pauza,
+			   pomoc;
 
-	int licznik_expl;
+	//eksplozje
 	sf::Texture textura_expl[4];
 	sf::Sprite expl[ilosc_explozji];
+	int ktory; // ktory samolot zostal zestrzelony
+	int licznik_expl;// by pokazywaæ kolejn¹ animacjê
+
+	//inne
+	sf::Clock zegar;
+	float deltatime = 0.0f;
+	void zaladujustawienia(int wybranysamolot);
+	void draw(sf::RenderWindow& window);
 };

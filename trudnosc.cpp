@@ -250,6 +250,7 @@ void TRUDNOSC::wPrawo() {
 }
 
 int TRUDNOSC::petlaglowna(sf::RenderWindow& window) {
+
 	ANIMACJA szary_menu(&samolot_textura[0], sf::Vector2u(2, 1), 0.6f);
 	ANIMACJA czarny_menu(&samolot_textura[1], sf::Vector2u(2, 1), 0.6f);
 	ANIMACJA papierowy_menu(&samolot_textura[2], sf::Vector2u(2, 1), 0.6f);

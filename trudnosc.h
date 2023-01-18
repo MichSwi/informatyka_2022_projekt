@@ -12,37 +12,39 @@ public:
 
 	int petlaglowna(sf::RenderWindow& window);
 
-	void Enter();
-	void wPrawo();
-	void wLewo();
-	void draw(sf::RenderWindow& window);
-	int licznik = 0;//mowi w jakim wierszu aktualnie jestesmy
-	bool sojusznik;
+	
 	int wybranysamolot = 1;
-	int pow = 0;//   1-powrot   2-zatwierdz
-	int daj_wybranysamolot() {
-		return wybranysamolot;
-	}
+	
 
-	sf::Texture samolot_textura[3];
-	sf::Texture sojusznik_textura;
-	sf::Sprite samolot_sprite[3];
-	sf::Sprite sojusznik_sprite;
-	sf::Text sojusznik_staty;
 
-	int rysuj_staty = -1;// -1 czyli ¿adne
+	
 
 	int stan() {
 		return pow;
 	}
 
+private:
+	int pow = 0;//   1-powrot   2-zatwierdz
+	int rysuj_staty = -1;// -1 czyli ¿adne
+	sf::Sprite sojusznik_sprite;
+	sf::Text sojusznik_staty;
+	sf::Texture samolot_textura[3];
+	sf::Texture sojusznik_textura;
+	sf::Sprite samolot_sprite[3];
+
+	void Enter();
+	void wPrawo();
+	void wLewo();
+	void draw(sf::RenderWindow& window);
+	bool sojusznik;
 
 	float deltatime = 0.0f;
-	sf::Clock zegar;
 	bool rysuj_sojusznika;
 
+	int licznik = 0;//mowi w jakim wierszu aktualnie jestesmy
 
-private:
+	sf::Clock zegar;
+
 	sf::Font czcionka;
 	sf::Text text1;//"czy potzrebujesz sojusznika?"
 	sf::Text text2;//"wybierz samolot"
@@ -51,5 +53,4 @@ private:
 	sf::Text zatw;
 	sf::Text powr;
 	sf::Text statystyki[3];
-
 };
